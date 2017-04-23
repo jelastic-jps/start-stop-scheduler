@@ -1,5 +1,5 @@
 //@auth
-//@req(url, name, start, stop)
+//@req(url, name)
 
 import com.hivext.api.core.utils.Transport;
 
@@ -21,13 +21,15 @@ for (var i = 0, l = tasks.length; i < l; i++){
     if (t.script == name) jelastic.utils.scheduler.RemoveTask(t.id);
 }
     
-if (start != '-') {
+var start = getParam('start'), stop = getParam('stop');
+
+if (start) {
     var params = toJSON({action: 'start', envName: '${env.envName}'});
     resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + start, description, params);
     if (resp.result != 0) return resp;
 }
 
-if (stop != '-') {
+if (stop) {
     var params = toJSON({action: 'stop', envName: '${env.envName}'});
     resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + stop, description, params);
     if (resp.result != 0) return resp;
