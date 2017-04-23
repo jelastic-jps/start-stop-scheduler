@@ -18,8 +18,7 @@ var description = "start-stop-scheduler";
 
 for (var i = 0, l = tasks.length; i < l; i++){
     var t = tasks[i];
-    //if (t.description == description) 
-      jelastic.utils.scheduler.RemoveTask(t.id);
+    if (t.script == name) jelastic.utils.scheduler.RemoveTask(t.id);
 }
     
 if (start != '-') {
