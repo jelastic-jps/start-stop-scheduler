@@ -29,7 +29,7 @@ if (start != '-') {
 }
 
 if (stop != '-') {
-    var params = toJSON({action: 'start', envName: '${env.envName}'});
+    var params = toJSON({action: 'stop', envName: '${env.envName}'});
     resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + stop, description, params);
     if (resp.result != 0) return resp;
 }
