@@ -22,5 +22,5 @@ for (var i = 0, l = tasks.length; i < l; i++){
       jelastic.utils.scheduler.RemoveTask(t.id);
 }
     
-var resp = jelastic.utils.scheduler.AddTask(name, "cron:" + cron, description, "{action: 'start'}");
+var resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + cron, description, "{action: 'start'}");
 return resp;
