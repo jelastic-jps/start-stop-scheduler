@@ -1,5 +1,5 @@
 //@auth
-//@req(url, name)
+//@req(url, name, cron)
 
 import com.hivext.api.core.utils.Transport;
 
@@ -10,4 +10,17 @@ var body = new Transport().get(url)
 jelastic.dev.scripting.DeleteScript(name);
 
 //create a new script 
-return jelastic.dev.scripting.CreateScript(name, 'js', body);
+var resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
+if (resp.result != 0) return resp;
+
+var tasks = jelastic.utils.scheduler.GetTasks().objects;
+var description = "start-stop-scheduler";
+
+for (var i = 0, l = tasks.length; i < l; i++){
+    var t = tasks[i];
+    //if (t.description == description) 
+      jelastic.utils.scheduler.RemoveTask(t.id);
+}
+    
+var resp = jelastic.utils.scheduler.AddTask(script, "cron:" + cron, description, "{action: 'start'}");
+return resp;
