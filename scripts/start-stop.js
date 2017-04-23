@@ -1,6 +1,6 @@
-//@auth @req(action)
+//@auth @req(action, envName)
 
-var c = jelastic.env.control, e = '${env.envName}', s = session;
+var c = jelastic.env.control, e = envName, s = session;
 switch (action) {
     case 'start': return c.StartEnv(e, s);
     case 'stop': return c.StopEnv(e, s, -1);
