@@ -6,3 +6,4 @@ switch (action) {
     case 'stop': return c.StopEnv(e, s, -1);
     case 'sleep': return c.SleepEnv(e, s);
     default: return {result: 99, error: 'unknown action [' + a + ']'}
+}
