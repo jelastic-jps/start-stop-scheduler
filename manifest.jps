@@ -5,7 +5,10 @@
         "text": "Use [Quartz cron triggers](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html) to schedule start and stop actions",
         "short": "Cron-based start-stop scheduler"
     },
-    "name": "Start-Stop Scheduler",
+    "name": "Start/Stop Scheduler",
+    "targetNodes": {
+	     "nodeGroup": "*"
+    },
     "settings": {
         "fields": [{
             "type": "string",
