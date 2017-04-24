@@ -7,7 +7,7 @@
     },
     "name": "Start/Stop Scheduler",
     "targetNodes": {
-	     "nodeGroup": "*"
+    	"nodeGroup": "*"
     },
     "settings": {
         "fields": [{
