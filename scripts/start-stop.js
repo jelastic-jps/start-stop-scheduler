@@ -7,3 +7,5 @@ switch (a) {
     case 'sleep': r = c.SleepEnv(e, s); break;
     default: r = {result: 99, error: 'unknown action [' + a + ']'}
 }
+
+return r;
