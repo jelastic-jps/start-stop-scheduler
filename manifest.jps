@@ -39,8 +39,6 @@
             "name": "${env.envName}-start-stop"
         }
     },
-    "success": {
-        "text": "Successfully installed!"
-    },
+    "success": "Your environment will be hibernated on the indicated schedule.",
     "jpsVersion": "1.0"
 }
