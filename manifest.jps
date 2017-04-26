@@ -1,44 +1,65 @@
 {
-    "jpsType": "update",
-    "id": "start-stop-scheduler",
-    "logo": "/images/logo.png",
-    "description": {
-        "text": "Use [Quartz cron triggers](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html) to schedule start and stop actions",
-        "short": "Cron-based start-stop scheduler"
-    },
-    "name": "Start/Stop Scheduler",
-    "targetNodes": {
-    	"nodeGroup": "*"
-    },
-    "settings": {
-        "fields": [{
-            "type": "string",
-            "name": "stop",
-            "caption": "Stop",
-            "default": "0 0 19 * * ?"
-        }, {
-            "type": "string",
-            "name": "start",
-            "caption": "Start",
-            "default": "0 0 9 * * ?"
-        }]
-    },
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master",
-    "onInstall": {
-        "script": "${baseUrl}/scripts/create-service.js?r_${fn.random}",
-        "params": {
-            "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
-            "name": "${env.envName}-start-stop",
-            "start": "${settings.start}",
-            "stop": "${settings.stop}"
-        }
-    },
-    "onUninstall": {
-        "script": "${baseUrl}/scripts/uninstall.js?r_${fn.random}",
-        "params": {
-            "name": "${env.envName}-start-stop"
-        }
-    },
-    "success": "Your environment will be hibernated on the indicated schedule.",
-    "jpsVersion": "1.0"
+  "jpsType": "update",
+  "id": "start-stop-scheduler",
+  "logo": "/images/logo.png",
+  "description": {
+    "text": "Use [Quartz cron triggers](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html) to schedule start and stop actions",
+    "short": "Cron-based start-stop scheduler"
+  },
+  "name": "Start/Stop Scheduler",
+  "targetNodes": {
+    "nodeGroup": "*"
+  },
+  "settings": {
+    "fields": [
+      {
+        "type": "string",
+        "name": "stop",
+        "caption": "Stop",
+        "default": "0 0 19 * * ?"
+      },
+      {
+        "type": "string",
+        "name": "start",
+        "caption": "Start",
+        "default": "0 0 9 * * ?"
+      }
+    ]
+  },
+  "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master",
+  "onInstall": {
+    "script": "/scripts/create-service.js?r_${fn.random}",
+    "params": {
+      "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
+      "name": "${env.envName}-start-stop",
+      "start": "${settings.start}",
+      "stop": "${settings.stop}"
+    }
+  },
+  "onUninstall": {
+    "script": "/scripts/uninstall.js?r_${fn.random}",
+    "params": {
+      "name": "${env.envName}-start-stop"
+    }
+  },
+  "actions": {
+    "reconfigure": {
+      "script": "/scripts/reconfigure.js?r_${fn.random}",
+      "params": {
+        "name": "${env.envName}-start-stop",
+        "start": "${this.start}",
+        "stop": "${this.stop}"
+      }
+    }
+  },
+  "buttons": {
+    "settings": "main",
+    "caption": "Configure",
+    "confirmText": "You are going to reconfigureevnironment scheduler. Continue?",
+    "loadingText": "Reconfiguring...",
+    "action": "reconfigure",
+    "successText": "You environment scheduler successfully reconfigured"
+  },
+  "success": "Your environment will be hibernated on the indicated schedule.",
+  "jpsVersion": "1.0"
 }
