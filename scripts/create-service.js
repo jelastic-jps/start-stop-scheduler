@@ -4,35 +4,37 @@
 import com.hivext.api.core.utils.Transport;
 
 //reading script from URL
-var body = new Transport().get(url)
+var body = new Transport().get(url),
+    startText = 'start',
+    stopText = 'stop'
 
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(name);
 
 //create a new script 
 var resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
-if (resp.result != 0) return resp;
+if (resp.result !== 0) return resp;
 
 var tasks = jelastic.utils.scheduler.GetTasks().objects;
 var description = "start-stop-scheduler";
 
 for (var i = 0, l = tasks.length; i < l; i++){
     var t = tasks[i];
-    if (t.script == name) jelastic.utils.scheduler.RemoveTask(t.id);
+    if (t.script === name) jelastic.utils.scheduler.RemoveTask(t.id);
 }
     
-var start = getParam('start'), stop = getParam('stop');
+var start = getParam(startText),
+    stop = getParam(stopText);
+
+
+function addTask (action, taskName) {
+    var params = toJSON({action: taskName, envName: '${env.envName}'});
+    return jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + action, description, params);
+}
 
 if (start) {
-    var params = toJSON({action: 'start', envName: '${env.envName}'});
-    resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + start, description, params);
-    if (resp.result != 0) return resp;
+    resp = addTask(start, startText);
+    if (resp.result !== 0) return resp;
 }
 
-if (stop) {
-    var params = toJSON({action: 'stop', envName: '${env.envName}'});
-    resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + stop, description, params);
-    if (resp.result != 0) return resp;
-}
-
-return resp;
+return stop ? addTask(stop, stopText) : resp;
