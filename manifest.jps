@@ -55,7 +55,6 @@
   "buttons": {
     "settings": "main",
     "caption": "Configure",
-    "confirmText": "You are going to reconfigureevnironment scheduler. Continue?",
     "loadingText": "Reconfiguring...",
     "action": "reconfigure",
     "successText": "You environment scheduler successfully reconfigured"
