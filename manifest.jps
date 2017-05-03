@@ -3,7 +3,7 @@
   "id": "start-stop-scheduler",
   "logo": "/images/logo.png",
   "description": {
-    "text": "Use [Quartz cron triggers](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html) to schedule environment start and stop actions",
+    "text": "Use [cron syntax](https://en.wikipedia.org/wiki/Cron#Overview) to schedule environment start and stop actions",
     "short": "Cron-based start-stop environment scheduler"
   },
   "name": "Env Start/Stop Scheduler",
@@ -16,13 +16,13 @@
         "type": "string",
         "name": "stop",
         "caption": "Stop",
-        "default": "0 0 19 * * ?"
+        "default": "0 19 * * *"
       },
       {
         "type": "string",
         "name": "start",
         "caption": "Start",
-        "default": "0 0 9 * * ?"
+        "default": "0 9 * * *"
       }
     ]
   },
@@ -32,8 +32,8 @@
     "params": {
       "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
       "name": "${env.envName}-start-stop",
-      "start": "${settings.start}",
-      "stop": "${settings.stop}"
+      "start": "0 ${settings.start}",
+      "stop": "0 ${settings.stop}"
     }
   },
   "onUninstall": {
