@@ -29,7 +29,7 @@ var start = getParam(startText),
 
 function addTask (action, taskName) {
     //trim string
-    var arr = action.replace(/\s+/g, " ").replace(/^\s+|\s+$/gm,'').split(' ');
+    var arr = action.replace(/\s+/g, ' ').replace(/^\s+|\s+$/gm,'').split(' ');
     //should be 5 elements
     if (arr.length != 5) return {result: 99, message:'wrong cron format [' + action + ']', type: 'error'}
     //replacing * at "Day of week" to make it compatible with quartz format 
