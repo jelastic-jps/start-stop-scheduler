@@ -34,7 +34,7 @@
         }
     },
     "onUninstall": "uninstall",
-    "onAfterDelete": "uninstall",
+    "onBeforeDelete": "uninstall",
     "actions": {
         "reconfigure": {
             "script": "/scripts/create-service.js?r_${fn.random}",
