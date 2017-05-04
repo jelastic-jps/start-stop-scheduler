@@ -3,14 +3,14 @@
 
 import com.hivext.api.core.utils.Transport;
 
-var description = "start-stop-scheduler", resp, tasks;
+var url = getParam('url'), description = "start-stop-scheduler", resp, tasks;
 
-if (!getParam('update')) {
-    //delete the script if it exists already
-    jelastic.dev.scripting.DeleteScript(name);
-
+if (url) {
     //reading script from URL
     var body = new Transport().get(url);
+
+    //delete the script if it exists already
+    jelastic.dev.scripting.DeleteScript(name);
 
     //create a new script 
     resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
