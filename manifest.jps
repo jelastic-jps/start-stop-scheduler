@@ -60,6 +60,6 @@
         "action": "reconfigure",
         "successText": "You environment scheduler successfully reconfigured"
     },
-    "success": "Your Env Start/Stop Scheduler application hasbeen successfully deployed to your Demo Cloud hosting environment.<br><br>According to the specified schedule, from now on your ${env.envName} environment will be hibernated as follows:<br>* Stopped at ${settings.stop} Started at ${settings.start}<br><br>To change this instruction, please re-install the add-on with new parameters.<br>For more information on possible scheduling options, refer to the official [Quartz CronTrigger](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html#format) guidance.",
+    "success": "Your Env Start/Stop Scheduler application has been successfully deployed to your Demo Cloud hosting environment.<br><br>According to the specified schedule, from now on your [${env.envName}](${env.url}) environment will be hibernated as follows:<br> * Stopped at ${settings.stop} * Started at ${settings.start}<br><br>To change this instruction, please re-install the add-on with new parameters.<br>For more information on possible scheduling options, refer to the official [Quartz CronTrigger](http://www.quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger.html#format) guidance.",
     "jpsVersion": "1.0"
 }
