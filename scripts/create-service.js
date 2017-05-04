@@ -28,6 +28,16 @@ var start = getParam(startText),
 
 
 function addTask (action, taskName) {
+    //trim string
+    var arr = action.replace(/\s+/g, " ").replace(/^\s+|\s+$/gm,'').split(' ');
+    //should be 5 elements
+    if (arr.length != 5) return {result: 99, message:'wrong cron format [' + action + ']', type: 'error'}
+    //replacing * at "Day of week" to make it compatible with quartz format 
+    if (arr[4] == '*') arr[4] = '?';
+    //adding seconds - always 0
+    arr.unshift('0');
+    action = arr.join(' ');
+    
     var params = toJSON({action: taskName, envName: '${env.envName}'});
     return jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + action, description, params);
 }
@@ -38,3 +48,4 @@ if (start) {
 }
 
 return stop ? addTask(stop, stopText) : resp;
+
