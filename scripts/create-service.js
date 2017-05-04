@@ -2,31 +2,73 @@
 //@req(url, name)
 
 import com.hivext.api.core.utils.Transport;
+import org.json.JSONObject;
 
-//reading script from URL
-var body = new Transport().get(url),
+var description = "start-stop-scheduler",
+    //reading script from URL
+    body = new Transport().get(url),
+    configureAction = 'action',
     startText = 'start',
-    stopText = 'stop'
+    stopText = 'stop',
+    checkTask,
+    tasks,
+    start,
+    stop,
+    task,
+    resp,
+    i, l
+
+start = getParam(startText)
+stop = getParam(stopText)
 
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(name);
 
 //create a new script 
-var resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
-if (resp.result !== 0) return resp;
+resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
+if (resp.result != 0) return resp;
 
-var tasks = jelastic.utils.scheduler.GetTasks().objects;
-var description = "start-stop-scheduler";
+resp = jelastic.utils.scheduler.GetTasks();
+if (resp.result != 0) return resp;
 
-for (var i = 0, l = tasks.length; i < l; i++){
-    var t = tasks[i];
-    if (t.script === name) jelastic.utils.scheduler.RemoveTask(t.id);
+tasks = resp.objects;
+
+if (getParam(configureAction)) {
+
+    if (start) {
+        resp = replaceTask(tasks, startText, start)
+        if (resp.result != 0) return resp;
+    }
+
+    return stop ? replaceTask(tasks, stopText, stop) : resp
+} else {
+    
+    if (start) {
+        resp = addTask(start, startText)
+        if (resp.result != 0) return resp;
+    }
+
+    return stop ? addTask(stop, stopText) : resp
+}
+
+function replaceTask(tasks, taskName, newTask) {
+    for (i = 0, l = tasks.length; i < l; i++) {
+        action = toNative(new JSONObject(tasks[i].params.replace('\\\\', '\\'))).action
+        checkTask = newTask.substring(0, newTask.length -1)
+        // check an identical tasks
+        if (action == taskName && tasks[i].trigger.indexOf(checkTask) == -1) {
+            // remove task
+            resp = jelastic.utils.scheduler.RemoveTask(tasks[i].id);
+            if (resp.result != 0) return resp;
+            // add new task    
+            return addTask(newTask, taskName);
+        }
+    }
+    return {
+        result: 0
+    };
 }
     
-var start = getParam(startText),
-    stop = getParam(stopText);
-
-
 function addTask (action, taskName) {
     //trim string
     var arr = action.replace(/\s+/g, ' ').replace(/^\s+|\s+$/gm,'').split(' ');
@@ -42,10 +84,6 @@ function addTask (action, taskName) {
     return jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + action, description, params);
 }
 
-if (start) {
-    resp = addTask(start, startText);
-    if (resp.result !== 0) return resp;
-}
-
-return stop ? addTask(stop, stopText) : resp;
-
+return {
+    result: 0
+};
