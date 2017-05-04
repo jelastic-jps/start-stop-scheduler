@@ -1,5 +1,5 @@
 //@auth
-//@req(url, name)
+//@req(name)
 
 import com.hivext.api.core.utils.Transport;
 
