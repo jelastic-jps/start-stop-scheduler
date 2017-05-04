@@ -37,11 +37,13 @@
     "onAfterDelete": "uninstall",
     "actions": {
         "reconfigure": {
-            "script": "/scripts/reconfigure.js?r_${fn.random}",
+            "script": "/scripts/create-service.js?r_${fn.random}",
             "params": {
                 "name": "${env.envName}-start-stop",
                 "start": "${this.start}",
-                "stop": "${this.stop}"
+                "stop": "${this.stop}",
+                "action": "configure",
+                "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}"
             }
         },
         "uninstall": {
