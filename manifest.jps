@@ -60,8 +60,8 @@
         "successText": "The scheduler has been successfully updated."
     },
     "success": {
-        "text": "/text/success.md",
-        "email": "/text/success.md"
+        "text": "/text/success.html",
+        "email": "/text/success.html"
     },
     "jpsVersion": "1.0"
 }
