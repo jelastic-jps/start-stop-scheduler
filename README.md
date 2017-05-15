@@ -30,6 +30,6 @@ Click **Install** to initiate the scheduler integration.
 
 In case you need to change the initial *Stop* and *Start* trigger conditions, click the **Add-ons** button next to the server it was installed to and select **Configure** at the appropriate scheduler plank (alternatively, the same could be applied with add-on re-installation).
 
-![scheduler-configuration](images/scheduler-configuration.png)
+![scheduler-configuration](images/scheduler-config.png)
 
 In case this solution is not needed any more, use the menu at the top-right corner of the same plank to **Uninstall** it.
