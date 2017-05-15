@@ -15,7 +15,7 @@ Copy link to the **_manifest.jps_** file above and [import](https://docs.jelasti
 ![scheduler-installation](images/scheduler-installation.png)
 
 Within the installation frame, specify the following data:
-- **Stop / Start** - [cron trigger](https://en.wikipedia.org/wiki/Cron#Overview) conditions that are specified respectively to the UTC time zone (5 characters each) and can be left blank to skip the corresponding action
+- **Stop / Start** - [cron trigger](https://en.wikipedia.org/wiki/Cron#Overview) conditions, specified respectively to the UTC time zone (5 characters each); can be left blank to skip the corresponding action      
 - **Environment name** - target environment that should be managed by the add-on
 - **Nodes** - [environment layer](https://docs.jelastic.com/jelastic-basic-hosting-concepts#layer) the add-on will be installed to (is fetched automatically upon selecting the environment)
 
