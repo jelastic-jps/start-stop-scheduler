@@ -19,7 +19,7 @@ Within the installation frame, specify the following data:
 - **Environment name** - target environment that should be managed by the add-on
 - **Nodes** - [environment layer](https://docs.jelastic.com/jelastic-basic-hosting-concepts#layer) the add-on will be installed to; is fetched automatically upon selecting the environment and should be left unchanged       
 
-`**Note:** The current scheduler implementation implies the complete stop of all containers in the destination environment (rather than container [hibernation](https://docs.jelastic.com/resources-utilization), which can be automatically interrupted upon any incoming request); thus, all the corresponding environment services will remain unavailable until it is launched again, either by the scheduler or manually.`          
+: **Note:** The current scheduler implementation implies the complete stop of all containers in the destination environment (rather than container [hibernation](https://docs.jelastic.com/resources-utilization), which can be automatically interrupted upon any incoming request); thus, all the corresponding environment services will remain unavailable until it is launched again, either by the scheduler or manually.            
 
 Click **Install** to initiate the scheduler integration.
 
