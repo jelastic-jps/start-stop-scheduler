@@ -6,7 +6,7 @@
         "text": "Use [cron syntax](https://en.wikipedia.org/wiki/Cron#Overview) to schedule environment start and stop actions",
         "short": "Cron-based start-stop environment scheduler"
     },
-    "name": "Env Start/Stop Scheduler",
+    "name": "Env Start/Stop Scheduler (Beta)",
     "targetNodes": {
         "nodeGroup": "*"
     },
