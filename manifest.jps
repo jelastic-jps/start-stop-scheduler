@@ -3,7 +3,7 @@
     "id": "start-stop-scheduler",
     "logo": "/images/logo.png",
     "description": {
-        "text": "<span>A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview) scheduler to automatically start and stop environment based on prescribed timing instructions.</span><div><b>Note</b> that timestamps for the appropriate triggers execution should be specified respectively to the UTC time zone.</div>",
+        "text": "<span>A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview) scheduler to automatically start and stop environment based on prescribed timing instructions.</span><div><b>Note</b> that the required timestamps should be specified respectively to the UTC time zone.</div>",
         "short": "Cron-based scheduler for automatic environment hibernation"
   },
     "name": "Env Start/Stop Scheduler (Beta)",
