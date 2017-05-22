@@ -30,3 +30,5 @@ In case you need to change the initial *Stop* and *Start* trigger conditions, cl
 ![scheduler-configuration](images/start-stop-scheduler-configuration.png)
 
 In case this solution is not needed any more, use the menu at the top-right corner of the same plank to **Uninstall** it.
+
+For more details and tips on Environment Start/Stop Scheduler usage, refer to the linked [guide](http://blog.jelastic.com/2017/05/18/start-stop-environment-scheduler-save-cloud-costs/).
