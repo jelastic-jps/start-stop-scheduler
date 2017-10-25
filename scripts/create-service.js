@@ -47,6 +47,7 @@ function addTask(cron, taskName) {
         var resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + quartz[i], description, params);
         if (resp.result != 0) return buildErrorMessage(resp)
     }
+    java.lang.System.out.println("DEBUG - getPara -> ");
     java.lang.System.out.println("DEBUG - getParam('action') -> " + getParam('action'));
     if (getParam('action') === 'u2pdate') {
         return 'update';
