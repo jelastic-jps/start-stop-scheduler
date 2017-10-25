@@ -47,6 +47,10 @@ function addTask(cron, taskName) {
         var resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + quartz[i], description, params);
         if (resp.result != 0) return buildErrorMessage(resp)
     }
+    
+    if (getParam('action'))
+    return 'update';
+    
     return {result: 0}
 }
 
