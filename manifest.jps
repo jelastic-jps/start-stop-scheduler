@@ -38,8 +38,7 @@
                 "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
                 "name": "${env.envName}-start-stop",
                 "start": "${settings.start}",
-                "stop": "${settings.stop}",
-                "action": "update"
+                "stop": "${settings.stop}"
             }
         },
         "update": {
@@ -47,7 +46,8 @@
             "params": {
                 "name": "${env.envName}-start-stop",
                 "start": "${this.start}",
-                "stop": "${this.stop}"
+                "stop": "${this.stop}",
+                "action": "update"
             }
         },
         "uninstall": {
