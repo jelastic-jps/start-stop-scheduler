@@ -38,7 +38,8 @@
                 "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
                 "name": "${env.envName}-start-stop",
                 "start": "${settings.start}",
-                "stop": "${settings.stop}"
+                "stop": "${settings.stop}",
+                "action": "update"
             }
         },
         "update": {
@@ -67,5 +68,11 @@
         "text": "/text/success.html",
         "email": "/text/success.html"
     },
-    "jpsVersion": "1.0"
+    "jpsVersion": "1.0",
+    "responses": {
+      "update": {
+        "type": "success",
+        "message": "/text/successAfterUpdate.html"
+      }
+    }
 }
