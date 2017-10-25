@@ -49,7 +49,7 @@ function addTask(cron, taskName) {
     }
     java.lang.System.out.println("DEBUG - getPara -> ");
     java.lang.System.out.println("DEBUG - getParam('action') -> " + getParam('action'));
-    if (getParam('action') === 'u2pdate') {
+    if (getParam('action') === 'update') {
         return 'update';
     }
     
