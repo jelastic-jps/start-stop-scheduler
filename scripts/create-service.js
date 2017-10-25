@@ -48,8 +48,9 @@ function addTask(cron, taskName) {
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
-    if (getParam('action') == 'u2pdate')
-    return 'update';
+    if (getParam('action') == 'u2pdate') {
+        return 'update';
+    }
     
     return {result: 0}
 }
