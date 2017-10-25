@@ -48,7 +48,7 @@ function addTask(cron, taskName) {
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
-    if (getParam('action'))
+    if (getParam('action') == 'update')
     return 'update';
     
     return {result: 0}
