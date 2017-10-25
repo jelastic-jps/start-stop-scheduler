@@ -72,7 +72,7 @@
     "responses": {
       "update": {
         "type": "success",
-        "message": "/text/successAfterUpdate.html"
+        "message": "https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master/text/successAfterUpdate.html"
       }
     }
 }
