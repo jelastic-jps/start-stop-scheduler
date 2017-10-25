@@ -55,7 +55,7 @@
         }
       },
       {
-        "script": "return {result: 0, type: 'success', message: '/dev/text/successAfterUpdate.html'}"
+        "script": "return {result: 0, message: '/dev/text/successAfterUpdate.html'}"
       }
     ],
     "uninstall": {
