@@ -51,7 +51,7 @@
           "name": "${env.envName}-start-stop",
           "start": "${this.start}",
           "stop": "${this.stop}",
-          "action": "update"
+          "action": "update2"
         }
       },
       {
