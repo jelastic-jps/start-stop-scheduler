@@ -1,9 +1,10 @@
 //@auth @req(name)
 
-jelastic.dev.scripting.DeleteScript(name);
+jelastic.dev.scripting.DeleteScript({session: session, name:name});
 
-var tasks = jelastic.utils.scheduler.GetTasks({ appid: appid, session: session }).objects;
+var tasks = jelastic.utils.scheduler.GetTasks({session: session}).objects;
 for (var i = 0, l = tasks.length; i < l; i++) 
-  if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask(tasks[i].id);
+  if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask({session:session, id: tasks[i].id});
+
 
 return {result:0}
