@@ -5,7 +5,7 @@ import com.hivext.api.core.utils.Transport;
 
 var url = getParam('url'),
     description = "start-stop-scheduler",
-    resp, tasks;
+    resp, tasks, envName = '${env.envName}';
 
 if (url) {
     //reading script from URL
@@ -40,11 +40,11 @@ function addTask(cron, taskName) {
     var quartz = convert(cron);
     var params = toJSON({
         action: taskName,
-        envName: '${env.envName}'
+        envName: envName
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        var resp = jelastic.utils.scheduler.AddTask(appid, session, name, "cron:" + quartz[i], description, params);
+        var resp = jelastic.utils.scheduler.CreateEnvTask(envName, session, name, "cron:" + quartz[i], description, params)
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
