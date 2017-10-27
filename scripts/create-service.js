@@ -12,19 +12,19 @@ if (url) {
     var body = new Transport().get(url);
 
     //delete the script if it exists already
-    jelastic.dev.scripting.DeleteScript(name);
+    jelastic.dev.scripting.DeleteScript({session: session, name:name});
 
     //create a new script 
     resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
-resp = jelastic.utils.scheduler.GetTasks(envAppid, session);
+resp = jelastic.utils.scheduler.GetTasks({session: session});
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
 for (var i = 0, l = tasks.length; i < l; i++)
-if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask(envAppid, session, tasks[i].id);
+if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask({session:session, id: tasks[i].id});
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
