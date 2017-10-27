@@ -19,12 +19,12 @@ if (url) {
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
-resp = jelastic.utils.scheduler.GetTasks();
+resp = jelastic.utils.scheduler.GetTasks(session);
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
 for (var i = 0, l = tasks.length; i < l; i++)
-if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask(tasks[i].id);
+if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask(session, tasks[i].id);
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
