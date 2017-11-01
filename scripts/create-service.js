@@ -42,7 +42,6 @@ if (stopCron) {
 
 if (getParam('action') && getParam('action') == 'update') {
     resp.type = 'info';
-    resp.message = 'Env Start/Stop Scheduler Add-On has been updated';
     return resp;
 }
 
