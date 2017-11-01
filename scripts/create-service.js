@@ -5,7 +5,9 @@ import com.hivext.api.core.utils.Transport;
 
 var url = getParam('url'),
     description = "start-stop-scheduler",
-    resp, tasks, envName = '${env.envName}', envAppid = '${env.appid}';
+    resp, tasks, envName = '${env.envName}', envAppid = '${env.appid}', version;
+
+version = jelastic.system.service.GetVersion().version.split("-").shift();
 
 if (url) {
     //reading script from URL
@@ -15,7 +17,7 @@ if (url) {
     jelastic.dev.scripting.DeleteScript({appid: appid, session: session, name:name});
 
     //create a new script 
-    resp = jelastic.dev.scripting.CreateScript(name, 'js', body);
+    resp = jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: name, type: 'js', code: body});
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
@@ -34,7 +36,17 @@ if (startCron) {
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
-return stopCron ? addTask(stopCron, 'stop') : resp
+if (stopCron) {
+    resp = addTask(stopCron, 'stop');
+}
+
+if (getParam('action') && getParam('action') == 'update') {
+    resp.type = 'info';
+    resp.message = 'Env Start/Stop Scheduler Add-On has been updated';
+    return resp;
+}
+
+return resp
 
 function addTask(cron, taskName) {
     var quartz = convert(cron);
@@ -44,12 +56,13 @@ function addTask(cron, taskName) {
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        var resp = jelastic.utils.scheduler.CreateEnvTask({envName: envName, appid: appid, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
+        if (compareVersions(version, '5.3') >= 0 || version.indexOf('trunk') != -1) {
+            var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
+        } else {
+            var resp = jelastic.utils.scheduler.AddTask({appid: appid, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
+        }
         if (resp.result != 0) return buildErrorMessage(resp)
     }
-    
-    if (getParam('action'))
-    return 'update';
     
     return {result: 0}
 }
@@ -59,6 +72,12 @@ function buildErrorMessage(resp) {
     resp.message = resp.error;
     return resp;
 }
+
+function compareVersions(a, b) {
+   a = a.split("."), b = b.split(".")
+   for (var i = 0, l = Math.max(a.length, b.length); i < l; i++) {x = parseInt(a[i], 10) || 0; y = parseInt(b[i], 10) || 0; if (x != y) return x > y ? 1 : -1 }
+   return 0;
+ }
 
 function convert(cron) {
     //conversion is based on https://github.com/lirantal/cron-to-quartz
