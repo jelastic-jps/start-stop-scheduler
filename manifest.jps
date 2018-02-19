@@ -1,78 +1,74 @@
 {
-    "jpsType": "update",
-    "id": "start-stop-scheduler",
-    "logo": "/images/logo.png",
-    "description": {
-        "text": "<span>A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview) scheduler to automatically start and stop environment based on prescribed timing instructions.</span><div><b>Note</b> that the required timestamps should be specified respectively to the UTC time zone.</div>",
-        "short": "Cron-based scheduler for automatic environment hibernation"
+  "jpsType": "update",
+  "id": "start-stop-scheduler",
+  "logo": "/images/logo.png",
+  "description": {
+    "text": "<span>A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview) scheduler to automatically start and stop environment based on prescribed timing instructions.</span><div><b>Note</b> that the required timestamps should be specified respectively to the UTC time zone.</div>",
+    "short": "Cron-based scheduler for automatic environment hibernation"
   },
-    "name": "Env Start/Stop Scheduler (Beta)",
-    "targetNodes": {
-        "nodeGroup": "*"
+  "name": "Env Start/Stop Scheduler (Beta)",
+  "targetNodes": {
+    "nodeGroup": "*"
+  },
+  "settings": {
+    "fields": [
+      {
+        "type": "string",
+        "name": "stop",
+        "caption": "Stop",
+        "default": "0 19 * * *",
+        "regexText": "Cron syntax is incorrect!",
+        "regex": "^(((([\\\\*]{1}){1,})|((\\\\*\\\\\\/){0,1}(([0-9\\/\\*\\-\\,]{1}){1,}|(([1-5]{1}){1}([0-9\\/\\*\\-\\,]{1}){1,}){1}))) ((([\\\\*]{1}){1,})|((\\\\*\\\\\\/){0,1}(([0-9\\/\\*\\-\\,]{1}){1,}|(([1]{1}){1}([0-9\\/\\*\\-\\,-]{1}){1,}){1}|([2]{1}){1}([0-3]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\/\\*\\-\\,]{1}){1,5}){1}|([3]{1}){1}([0-1]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\/\\*\\-\\,]{1}){1,}){1}|([3]{1}){1}([0-1]{1}){1}))|(jan|feb|mar|apr|may|jun|jul|aug|sep|okt|nov|dec)(-?\\w+?)?) ((([\\\\*]{1}){1})|((\\\\*\\\\\\/){0,1}(([0-7]{1,}(-?[0-7]?)){1}))|(sun|mon|tue|wed|thu|fri|sat)(-?\\w+?)?))$"
+      },
+      {
+        "type": "string",
+        "name": "start",
+        "caption": "Start",
+        "default": "0 9 * * *",
+        "regexText": "Cron syntax is incorrect!",
+        "regex": "^(((([\\\\*]{1}){1,})|((\\\\*\\\\\\/){0,1}(([0-9\\/\\*\\-\\,]{1}){1,}|(([1-5]{1}){1}([0-9\\/\\*\\-\\,]{1}){1,}){1}))) ((([\\\\*]{1}){1,})|((\\\\*\\\\\\/){0,1}(([0-9\\/\\*\\-\\,]{1}){1,}|(([1]{1}){1}([0-9\\/\\*\\-\\,-]{1}){1,}){1}|([2]{1}){1}([0-3]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\/\\*\\-\\,]{1}){1,5}){1}|([3]{1}){1}([0-1]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\/\\*\\-\\,]{1}){1,}){1}|([3]{1}){1}([0-1]{1}){1}))|(jan|feb|mar|apr|may|jun|jul|aug|sep|okt|nov|dec)(-?\\w+?)?) ((([\\\\*]{1}){1})|((\\\\*\\\\\\/){0,1}(([0-7]{1,}(-?[0-7]?)){1}))|(sun|mon|tue|wed|thu|fri|sat)(-?\\w+?)?))$"
+      }
+    ]
+  },
+  "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master",
+  "onInstall": "create",
+  "onUninstall": "uninstall",
+  "onBeforeDelete": "uninstall",
+  "actions": {
+    "create": {
+      "script": "/scripts/create-service.js?r_${fn.random}",
+      "params": {
+        "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
+        "name": "${env.envName}-start-stop",
+        "start": "${settings.start}",
+        "stop": "${settings.stop}"
+      }
     },
-    "settings": {
-        "fields": [{
-            "type": "string",
-            "name": "stop",
-            "caption": "Stop",
-            "default": "0 19 * * *",
-            "regexText": "Cron syntax is incorrect!",
-            "regex": "^(((([\\\\*]{1}){1,})|((\\\\*\\\\\\\/){0,1}(([0-9\\\/\\*\\-\\,]{1}){1,}|(([1-5]{1}){1}([0-9\\\/\\*\\-\\,]{1}){1,}){1}))) ((([\\\\*]{1}){1,})|((\\\\*\\\\\\\/){0,1}(([0-9\\\/\\*\\-\\,]{1}){1,}|(([1]{1}){1}([0-9\\\/\\*\\-\\,-]{1}){1,}){1}|([2]{1}){1}([0-3]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\\/\\*\\-\\,]{1}){1,5}){1}|([3]{1}){1}([0-1]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\\/\\*\\-\\,]{1}){1,}){1}|([3]{1}){1}([0-1]{1}){1}))|(jan|feb|mar|apr|may|jun|jul|aug|sep|okt|nov|dec)(-?\\w+?)?) ((([\\\\*]{1}){1})|((\\\\*\\\\\\\/){0,1}(([0-7]{1}){1}))|(sun|mon|tue|wed|thu|fri|sat)(-?\\w+?)?))$"
-        }, {
-            "type": "string",
-            "name": "start",
-            "caption": "Start",
-            "default": "0 9 * * *",
-            "regexText": "Cron syntax is incorrect!",
-            "regex": "^(((([\\\\*]{1}){1,})|((\\\\*\\\\\\\/){0,1}(([0-9\\\/\\*\\-\\,]{1}){1,}|(([1-5]{1}){1}([0-9\\\/\\*\\-\\,]{1}){1,}){1}))) ((([\\\\*]{1}){1,})|((\\\\*\\\\\\\/){0,1}(([0-9\\\/\\*\\-\\,]{1}){1,}|(([1]{1}){1}([0-9\\\/\\*\\-\\,-]{1}){1,}){1}|([2]{1}){1}([0-3]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\\/\\*\\-\\,]{1}){1,5}){1}|([3]{1}){1}([0-1]{1}){1}))) ((([\\\\*]{1}){1})|((\\\\*\\\\\\\/){0,1}(([1-9]{1}){1}|(([1-2]{1}){1}([0-9\\\/\\*\\-\\,]{1}){1,}){1}|([3]{1}){1}([0-1]{1}){1}))|(jan|feb|mar|apr|may|jun|jul|aug|sep|okt|nov|dec)(-?\\w+?)?) ((([\\\\*]{1}){1})|((\\\\*\\\\\\\/){0,1}(([0-7]{1}){1}))|(sun|mon|tue|wed|thu|fri|sat)(-?\\w+?)?))$"
-            }]
+    "update": {
+      "script": "/scripts/create-service.js?r_${fn.random}",
+      "params": {
+        "name": "${env.envName}-start-stop",
+        "start": "${this.start}",
+        "stop": "${this.stop}"
+      }
     },
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master",
-    "onInstall": "create",
-    "onUninstall": "uninstall",
-    "onBeforeDelete": "uninstall",
-    "actions": {
-        "create": {
-            "script": "/scripts/create-service.js?r_${fn.random}",
-            "params": {
-                "url": "${baseUrl}/scripts/start-stop.js?r_${fn.random}",
-                "name": "${env.envName}-start-stop",
-                "start": "${settings.start}",
-                "stop": "${settings.stop}"
-            }
-        },
-        "update": {
-            "script": "/scripts/create-service.js?r_${fn.random}",
-            "params": {
-                "name": "${env.envName}-start-stop",
-                "start": "${this.start}",
-                "stop": "${this.stop}",
-                "action": "update"
-            }
-        },
-        "uninstall": {
-            "script": "/scripts/uninstall.js?r_${fn.random}",
-            "params": {
-                "name": "${env.envName}-start-stop"
-            }
-        }
-    },
-    "buttons": {
-        "settings": "main",
-        "caption": "Configure",
-        "loadingText": "Updating...",
-        "action": "update",
-        "successText": "The scheduler has been successfully updated."
-    },
-    "success": {
-        "text": "/text/success.html",
-        "email": "/text/success.html"
-    },
-    "jpsVersion": "1.0",
-    "responses": {
-      "update": {
-        "type": "success",
-        "message": "/text/successAfterUpdate.html"
+    "uninstall": {
+      "script": "/scripts/uninstall.js?r_${fn.random}",
+      "params": {
+        "name": "${env.envName}-start-stop"
       }
     }
+  },
+  "buttons": {
+    "settings": "main",
+    "caption": "Configure",
+    "loadingText": "Updating...",
+    "action": "update",
+    "successText": "The scheduler has been successfully updated."
+  },
+  "success": {
+    "text": "/text/success.html",
+    "email": "/text/success.html"
+  },
+  "jpsVersion": "1.0"
 }
