@@ -1,16 +1,16 @@
 //@auth @req(action, envName)
 
-var a = action + '', c = jelastic.env.control, e = envName, s = session, r, s;
-s = c.GetEnvInfo(e, session).env.status;
+var a = action + '', c = jelastic.env.control, e = envName, s = session, r, status;
+status = c.GetEnvInfo(e, s).env.status;
 
 switch (a) {
     case 'start': 
-        if (s == 2 || s ==4) {
+        if (status == 2 || status ==4) {
             r = c.StartEnv(e, s); 
         }
         break;
     case 'stop': 
-        if (s == 1) {
+        if (status == 1) {
             r = c.StopEnv(e, s, -1);
         }
         break;
@@ -18,4 +18,6 @@ switch (a) {
     default: r = {result: 99, error: 'unknown action [' + a + ']'}
 }
 
-return r;
+return r || {
+    result: 0
+};
