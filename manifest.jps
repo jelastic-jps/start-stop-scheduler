@@ -30,7 +30,7 @@
       }
     ]
   },
-  "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master",
+  "baseUrl": "https://raw.githubusercontent.com/dzotic9/start-stop-scheduler/master",
   "onInstall": "create",
   "onUninstall": "uninstall",
   "onBeforeDelete": "uninstall",
