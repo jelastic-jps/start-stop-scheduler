@@ -19,5 +19,6 @@ switch (a) {
 }
 
 return r || {
-    result: 0
+    result: 0,
+    message: "Unable to " + a + " environemnt, status is "+ status, 
 };
