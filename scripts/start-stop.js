@@ -29,5 +29,5 @@ switch (a) {
 
 return r || {
     result: 0,
-    message: "Unable to " + a + " environment, status is "+ status, 
+    message: "Unable to " + a + " environment, status is "+ status 
 };
