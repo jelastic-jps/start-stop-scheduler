@@ -46,8 +46,9 @@ if (getParam('action') && getParam('action') == 'update') {
 }
 
 resp.appid = appid;
+resp.session = session;
 
-return resp
+return resp;
 
 function addTask(cron, taskName) {
     var quartz = convert(cron);
