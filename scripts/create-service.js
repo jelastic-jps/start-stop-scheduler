@@ -45,6 +45,8 @@ if (getParam('action') && getParam('action') == 'update') {
     return resp;
 }
 
+resp.appid = appid;
+
 return resp
 
 function addTask(cron, taskName) {
