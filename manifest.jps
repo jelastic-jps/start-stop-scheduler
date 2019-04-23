@@ -73,7 +73,7 @@ buttons:
   loadingText: Updating...
   action: update
   successText: The scheduler has been successfully updated.
--success:
+success:
   text: "/text/success.html"
   email: "/text/success.html"
 version: '1.0'
