@@ -41,7 +41,7 @@ actions:
     - script: "/scripts/create-service.js?r_${fn.random}"
       params:
         url: "${baseUrl}/scripts/start-stop.js?r_${fn.random}"
-        name: "${env.envName}-start-stop"
+        name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"
         start: "${settings.start}"
         stop: "${settings.stop}"
     - setGlobals:
@@ -51,11 +51,11 @@ actions:
         import com.hivext.api.core.utils.Transport;
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
-        return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
+        return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
   update:
     script: "/scripts/create-service.js?r_${fn.random}"
     params:
-      name: "${env.envName}-start-stop"
+      name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"
       start: "${this.start}"
       stop: "${this.stop}"
   uninstall:
@@ -63,9 +63,9 @@ actions:
       return jelastic.utils.scheduler.AddTask({
         appid: '${globals.appid}',
         session: session,
-        script: 'uninstall-${env.envName}-start-stop',
+        script: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop',
         trigger: "once_delay:1000",
-        params: {name: "${env.envName}-start-stop"}
+        params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
       })
 buttons:
   settings: main
@@ -73,7 +73,4 @@ buttons:
   loadingText: Updating...
   action: update
   successText: The scheduler has been successfully updated.
-success:
-  text: "/text/success.html"
-  email: "/text/success.html"
-version: '1.0'
+success: /text/success.html
