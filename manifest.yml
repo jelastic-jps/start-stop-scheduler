@@ -1,0 +1,210 @@
+type: update
+id: start-stop-scheduler
+logo: /images/logo.png
+description:
+  text: "A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview)
+    scheduler to automatically start and stop environment based on prescribed timing
+    instructions."
+  short: Cron-based scheduler for automatic environment hibernation
+name: Env Start/Stop Scheduler
+targetNodes:
+  nodeGroup: '*'
+onBeforeInit: |
+  import java.util.TimeZone;
+  var zones = toNative(TimeZone.getAvailableIDs());
+  var values = {};
+  
+  for (var i = 0, n = zones.length; i < n; i++) {
+    var offset = TimeZone.getTimeZone(zones[i]).getRawOffset()/3600000;
+    var m = offset % 1;
+    if (m != 0) {
+      m *= 60;
+    }
+    if (Math.abs(m) < 10) m = "0" + Math.abs(m);
+    var h = Math.floor(offset);
+    if (Math.abs(h) < 10) h = h < 0 ? "-0" + Math.abs(h) : "+0" + h; else if (h >= 0) h = "+" + h;
+    values[zones[i]] = zones[i] + (zones[i] == "GMT" ? "" : " (GMT" + h + ":" + m + ")");
+  }
+
+  jps.settings.fields.push({
+        name: "dashoard_url",
+        caption: "Time Zone",
+        type: "list",
+        required: true,
+        width: 250,
+        editable: true,
+        values: values,
+        default: TimeZone.getDefault().getID()
+      })
+  return jps;
+  
+settings:
+  fields:  
+  - caption: Stop 
+    type: toggle
+    name: stopCron
+    default: true
+    
+  - type: string
+    name: stopTime
+    caption: Time
+    inputType: time
+    default: "19:00"
+    width: 100
+
+  - caption: Days
+    type: compositefield
+    name: cf1
+    defaultMargins: 0 15 0 0
+    items:
+      - name: mon1
+        value: true
+        type: checkbox
+        caption: Mon
+      - name: tue1
+        value: true
+        type: checkbox
+        caption: Tue
+      - name: wed1
+        value: true
+        type: checkbox
+        caption: Wed
+      - name: thu1
+        value: true
+        type: checkbox
+        caption: Thu
+      - name: fri1
+        value: true
+        type: checkbox
+        caption: Fri
+      - name: sat1
+        value: true
+        type: checkbox
+        caption: Sat
+      - name: sun1
+        value: true
+        type: checkbox
+        caption: Sun
+        
+  - type: displayfield
+        
+  - caption: Start 
+    type: toggle
+    name: startCron
+    default: true
+        
+  - type: string
+    name: startTime
+    caption: Time
+    inputType: time
+    default: "09:00"
+    width: 100
+
+  - caption: Days
+    type: compositefield
+    name: cf3
+    defaultMargins: 0 15 0 0
+    items:
+      - name: mon2
+        value: true
+        type: checkbox
+        caption: Mon
+      - name: tue2
+        value: true
+        type: checkbox
+        caption: Tue
+      - name: wed2
+        value: true
+        type: checkbox
+        caption: Wed
+      - name: thu2
+        value: true
+        type: checkbox
+        caption: Thu
+      - name: fri2
+        value: true
+        type: checkbox
+        caption: Fri
+      - name: sat2
+        value: true
+        type: checkbox
+        caption: Sat
+      - name: sun2
+        value: true
+        type: checkbox
+        caption: Sun
+        
+  - caption: 
+    type: displayfield
+        
+
+baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master
+onInstall: create
+onUninstall: uninstall
+onBeforeDelete: uninstall
+actions:
+  convert: 
+    - script: |
+        var resp = {result:0}
+        if (${settings.startCron}) {
+          var time = "${settings.startTime}".split(":");
+          resp.start = (parseInt(time[1],10) + " " + parseInt(time[0],10) + " * * " + 
+            (${settings.sun1} ? "0,":"") +
+            (${settings.mon1} ? "1,":"") + 
+            (${settings.tue1} ? "2,":"") + 
+            (${settings.wed1} ? "3,":"") + 
+            (${settings.thu1} ? "4,":"") + 
+            (${settings.fri1} ? "5,":"") + 
+            (${settings.sat1} ? "6":"")).replace(/,+$/g,"");
+        }
+        if (${settings.stopCron}) {
+          var time = "${settings.stopTime}".split(":");
+          resp.stop = (parseInt(time[1],10) + " " + parseInt(time[0],10) + " * * " + 
+            (${settings.sun2} ? "0,":"") +
+            (${settings.mon2} ? "1,":"") + 
+            (${settings.tue2} ? "2,":"") + 
+            (${settings.wed2} ? "3,":"") + 
+            (${settings.thu2} ? "4,":"") + 
+            (${settings.fri2} ? "5,":"") + 
+            (${settings.sat2} ? "6":"")).replace(/,+$/g,"");
+        }
+                
+        return resp;
+  
+  create:
+    - convert
+    - execScript: "${baseUrl}/scripts/start-stop.js?r_${fn.random}"
+    - setGlobals:
+        appid: ${response.appid}
+    - script: |
+        import com.hivext.api.core.utils.Transport;
+        var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
+        var body = new Transport().get(url);
+        return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
+  update:
+    - convert
+    - execScript
+  execScript:
+    - script: "/scripts/create-service.js?r_${fn.random}"
+      params:
+        url: ${this:}
+        name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"
+        start: "${response.start:}"
+        stop: "${response.stop:}"
+    
+  uninstall:
+    script: |
+      return jelastic.utils.scheduler.AddTask({
+        appid: '${globals.appid}',
+        session: session,
+        script: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop',
+        trigger: "once_delay:1000",
+        params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
+      })
+buttons:
+  settings: main
+  caption: Configure
+  loadingText: Updating...
+  action: update
+  successText: The scheduler has been successfully updated.
+success: /text/success.html
