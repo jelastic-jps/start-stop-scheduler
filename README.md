@@ -34,7 +34,7 @@ Click **Install** to initiate the scheduler integration.
 The installation results in the confirmation window:
 
 <p align="left"> 
-<img src="images/success.png" width="300">
+<img src="images/success.png" width="400">
 </p>
 
 ## Managing Start/Stop Scheduler
