@@ -212,4 +212,4 @@ buttons:
   loadingText: Updating...
   action: update
   successText: The scheduler has been successfully updated.
-success: /text/success.html
+success: /text/success.md
