@@ -12,7 +12,7 @@ For more information about [Jelastic Add-Ons](https://github.com/jelastic-jps/jp
 
 Copy link to the **_manifest.jps_** file above and [import](https://docs.jelastic.com/environment-import) it to your Jelastic dashboard (or, alternatively, locate and launch this package via [Jelastic Marketplace](https://docs.jelastic.com/marketplace)).
 
-![scheduler-installation](images/installation.png)
+![scheduler-installation](images/install.png)
 
 Within the installation frame:
 - enable/disable environment **stop** action  
