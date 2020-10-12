@@ -51,7 +51,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf1
-    defaultMargins: 0 5 0 0
+    defaultMargins: 0 7 0 0
     items:
       - name: mon1
         value: true
@@ -99,7 +99,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf3
-    defaultMargins: 0 5 0 0
+    defaultMargins: 0 7 0 0
     items:
       - name: mon2
         value: true
