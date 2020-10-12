@@ -17,15 +17,15 @@ Copy link to the **_manifest.jps_** file above and [import](https://docs.jelasti
 </p>
 
 Within the installation frame:
-- enable/disable environment **stop** action  
+- enable/disable environment *Stop* action  
 - specify at what time the environment must be stopped  
 - check/uncheck the days of the week the stop action to be applied  
-- enable/disable environment **start** action  
+- enable/disable environment *Start* action  
 - specify at what time the environment must be stopped  
 - check/uncheck the days of the week the stop action to be applied  
 - pick the **Time Zone** in which the actions must be performed  
-- **Environment name** - target environment that should be managed by add-on  
-- **Nodes** - [environment layer](https://docs.jelastic.com/jelastic-basic-hosting-concepts#layer) the add-on will be installed to; is fetched automatically upon selecting the environment and should be left unchanged  
+- choose the target environment that should be managed by add-on in the **Environment name** field
+- if required in the [Nodes](https://docs.jelastic.com/jelastic-basic-hosting-concepts#layer) field get a node the add-on will be applied to or leave unchanged as it was fetched upon selecting the environment  
 
 > **Note** that the current scheduler implementation implies the complete stop of all containers in the destination environment (rather than container [hibernation](https://docs.jelastic.com/resources-utilization), which can be automatically interrupted upon any incoming request); thus, all the corresponding environment services will remain unavailable until it is launched again, either by the scheduler or manually.            
 
