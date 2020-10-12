@@ -19,10 +19,10 @@ Copy link to the **_manifest.jps_** file above and [import](https://docs.jelasti
 Within the installation frame:
 - enable/disable environment *Stop* action  
 - specify at what time the environment must be stopped  
-- check/uncheck the days of the week the stop action to be applied  
+- check/uncheck the days of the week the *Stop* action to be applied  
 - enable/disable environment *Start* action  
 - specify at what time the environment must be stopped  
-- check/uncheck the days of the week the stop action to be applied  
+- check/uncheck the days of the week the *Start* action to be applied  
 - pick the **Time Zone** in which the actions must be performed  
 - choose the target environment that should be managed by add-on in the **Environment name** field
 - if required in the [Nodes](https://docs.jelastic.com/jelastic-basic-hosting-concepts#layer) field get a node the add-on will be applied to or leave unchanged as it was fetched upon selecting the environment  
