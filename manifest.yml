@@ -4,7 +4,8 @@ logo: /images/logo.png
 description:
   text: "A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview)
     scheduler to automatically start and stop environment based on prescribed timing
-    instructions."
+    instructions. **Note** that the required timestamps should be specified
+    respectively to the UTC time zone."
   short: Cron-based scheduler for automatic environment hibernation
 name: Env Start/Stop Scheduler
 targetNodes:
@@ -17,17 +18,15 @@ onBeforeInit: |
   for (var i = 0, n = zones.length; i < n; i++) {
     var offset = TimeZone.getTimeZone(zones[i]).getRawOffset()/3600000;
     var m = offset % 1;
-    if (m != 0) {
-      m *= 60;
-    }
-    if (Math.abs(m) < 10) m = "0" + Math.abs(m);
+    if (m != 0) m = Math.abs(m * 60);
+    if (m < 10) m = "0" + m;
     var h = Math.floor(offset);
     if (Math.abs(h) < 10) h = h < 0 ? "-0" + Math.abs(h) : "+0" + h; else if (h >= 0) h = "+" + h;
     values[zones[i]] = zones[i] + (zones[i] == "GMT" ? "" : " (GMT" + h + ":" + m + ")");
   }
 
   jps.settings.fields.push({
-        name: "dashoard_url",
+        name: "tz",
         caption: "Time Zone",
         type: "list",
         required: true,
@@ -55,7 +54,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf1
-    defaultMargins: 0 15 0 0
+    defaultMargins: 0 10 0 0
     items:
       - name: mon1
         value: true
@@ -103,7 +102,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf3
-    defaultMargins: 0 15 0 0
+    defaultMargins: 0 10 0 0
     items:
       - name: mon2
         value: true
@@ -145,30 +144,36 @@ onBeforeDelete: uninstall
 actions:
   convert: 
     - script: |
-        var resp = {result:0}
-        if (${settings.startCron}) {
-          var time = "${settings.startTime}".split(":");
-          resp.start = (parseInt(time[1],10) + " " + parseInt(time[0],10) + " * * " + 
-            (${settings.sun1} ? "0,":"") +
-            (${settings.mon1} ? "1,":"") + 
-            (${settings.tue1} ? "2,":"") + 
-            (${settings.wed1} ? "3,":"") + 
-            (${settings.thu1} ? "4,":"") + 
-            (${settings.fri1} ? "5,":"") + 
-            (${settings.sat1} ? "6":"")).replace(/,+$/g,"");
-        }
+        var resp = {result:0}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset();
+        
         if (${settings.stopCron}) {
-          var time = "${settings.stopTime}".split(":");
-          resp.stop = (parseInt(time[1],10) + " " + parseInt(time[0],10) + " * * " + 
-            (${settings.sun2} ? "0,":"") +
-            (${settings.mon2} ? "1,":"") + 
-            (${settings.tue2} ? "2,":"") + 
-            (${settings.wed2} ? "3,":"") + 
-            (${settings.thu2} ? "4,":"") + 
-            (${settings.fri2} ? "5,":"") + 
-            (${settings.sat2} ? "6":"")).replace(/,+$/g,"");
+          var time = "${settings.stopTime}".split(":"),   
+              d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
+              d2 = new Date(d1.getTime() + offset),
+              dd = d2.getDate() - d1.getDate(),
+              days = getDays([${settings.sun1}, ${settings.mon1}, ${settings.tue1}, ${settings.wed1}, ${settings.thu1}, ${settings.fri1}, ${settings.sat1}], dd);              
+          resp.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
         }
-                
+        if (${settings.startCron}) {
+          var time = "${settings.startTime}".split(":"),   
+              d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
+              d2 = new Date(d1.getTime() + offset),
+              dd = d2.getDate() - d1.getDate(),
+              days = getDays([${settings.sun2}, ${settings.mon2}, ${settings.tue2}, ${settings.wed2}, ${settings.thu2}, ${settings.fri2}, ${settings.sat2}], dd);              
+          resp.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+        }
+        function getDays(settings, dd){
+          var days = [];
+          for (var i = 0; i < settings.length; i++) if (settings[i]) days.push(i);
+          if (days.length < 7 && dd != 0) {
+            for (var i = 0; i < days.length; i++){
+              days[i] += dd;
+              if (days[i] < 0) days[i] +=7; else if (days[i] > 6) days[i] -=7;
+            }
+            days.sort();
+          }
+          return days;
+        }        
         return resp;
   
   create:
