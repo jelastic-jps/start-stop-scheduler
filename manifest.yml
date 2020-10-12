@@ -47,7 +47,8 @@ settings:
     caption: Time
     inputType: time
     default: "19:00"
-    width: 100
+    cls: x-form-text
+    width: 120 
 
   - caption: Days
     type: compositefield
@@ -95,7 +96,8 @@ settings:
     caption: Time
     inputType: time
     default: "09:00"
-    width: 100
+    cls: x-form-text
+    width: 120 
 
   - caption: Days
     type: compositefield
