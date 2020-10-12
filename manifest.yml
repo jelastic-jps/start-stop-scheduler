@@ -1,6 +1,7 @@
 type: update
 id: start-stop-scheduler
 logo: /images/logo.png
+baseUrl: https://raw.githubusercontent.com/sych74/start-stop-scheduler/master
 description:
   text: "A simple weekly scheduler to automatically start and stop the environment within the prescribed Time Zone"
   short: The scheduler for automatic environment hibernation and wake-up
@@ -51,7 +52,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf1
-    defaultMargins: 0 7 0 0
+    defaultMargins: 0 10 0 0
     items:
       - name: mon1
         value: true
@@ -134,7 +135,6 @@ settings:
     type: displayfield
         
 
-baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master
 onInstall: create
 onUninstall: uninstall
 onBeforeDelete: uninstall
