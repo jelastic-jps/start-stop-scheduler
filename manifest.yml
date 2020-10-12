@@ -2,11 +2,8 @@ type: update
 id: start-stop-scheduler
 logo: /images/logo.png
 description:
-  text: "A simple [cron-based](https://en.wikipedia.org/wiki/Cron#Overview)
-    scheduler to automatically start and stop environment based on prescribed timing
-    instructions. **Note** that the required timestamps should be specified
-    respectively to the UTC time zone."
-  short: Cron-based scheduler for automatic environment hibernation
+  text: "A simple weekly scheduler to automatically start and stop the environment within the prescribed Time Zone"
+  short: The scheduler for automatic environment hibernation and wake-up
 name: Env Start/Stop Scheduler
 targetNodes:
   nodeGroup: '*'
@@ -54,7 +51,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf1
-    defaultMargins: 0 10 0 0
+    defaultMargins: 0 7 0 0
     items:
       - name: mon1
         value: true
@@ -102,7 +99,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf3
-    defaultMargins: 0 10 0 0
+    defaultMargins: 0 7 0 0
     items:
       - name: mon2
         value: true
@@ -212,4 +209,4 @@ buttons:
   loadingText: Updating...
   action: update
   successText: The scheduler has been successfully updated.
-success: /text/success.html
+success: /text/success.md
