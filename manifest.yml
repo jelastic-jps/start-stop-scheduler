@@ -54,6 +54,10 @@ settings:
     name: cf1
     defaultMargins: 0 10 0 0
     items:
+      - name: sun1
+        value: true
+        type: checkbox
+        caption: Sun
       - name: mon1
         value: true
         type: checkbox
@@ -78,10 +82,6 @@ settings:
         value: true
         type: checkbox
         caption: Sat
-      - name: sun1
-        value: true
-        type: checkbox
-        caption: Sun
         
   - type: displayfield
         
@@ -102,6 +102,10 @@ settings:
     name: cf3
     defaultMargins: 0 7 0 0
     items:
+      - name: sun2
+        value: true
+        type: checkbox
+        caption: Sun
       - name: mon2
         value: true
         type: checkbox
@@ -126,10 +130,6 @@ settings:
         value: true
         type: checkbox
         caption: Sat
-      - name: sun2
-        value: true
-        type: checkbox
-        caption: Sun
         
   - caption: 
     type: displayfield
@@ -141,7 +141,8 @@ onBeforeDelete: uninstall
 actions:
   convert: 
     - script: |
-        var resp = {result:0}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset();
+        var resp = {result:0, onAfterReturn: {setGlobals:{}}}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset(),
+            dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         
         if (${settings.stopCron}) {
           var time = "${settings.stopTime}".split(":"),   
@@ -150,6 +151,9 @@ actions:
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun1}, ${settings.mon1}, ${settings.tue1}, ${settings.wed1}, ${settings.thu1}, ${settings.fri1}, ${settings.sat1}], dd);              
           resp.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+          var daysStop = [];
+          for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]]);
+          resp.onAfterReturn.setGlobals.daysStop = daysStop.join(", ");
         }
         if (${settings.startCron}) {
           var time = "${settings.startTime}".split(":"),   
@@ -158,6 +162,9 @@ actions:
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun2}, ${settings.mon2}, ${settings.tue2}, ${settings.wed2}, ${settings.thu2}, ${settings.fri2}, ${settings.sat2}], dd);              
           resp.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+          var daysStart = [];
+          for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]]);
+          resp.onAfterReturn.setGlobals.daysStart = daysStart.join(", ");
         }
         function getDays(settings, dd){
           var days = [];
