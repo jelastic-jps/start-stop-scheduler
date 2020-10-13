@@ -53,7 +53,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf1
-    defaultMargins: 0 10 0 0
+    defaultMargins: 0 8 0 0
     items:
       - name: sun1
         value: true
@@ -102,7 +102,7 @@ settings:
   - caption: Days
     type: compositefield
     name: cf3
-    defaultMargins: 0 10 0 0
+    defaultMargins: 0 8 0 0
     items:
       - name: sun2
         value: true
@@ -152,9 +152,9 @@ actions:
               d2 = new Date(d1.getTime() + offset),
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun1}, ${settings.mon1}, ${settings.tue1}, ${settings.wed1}, ${settings.thu1}, ${settings.fri1}, ${settings.sat1}], dd);              
-          resp.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+          resp.onAfterReturn.setGlobals.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
           var daysStop = [];
-          for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]-1]);
+          for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]]);
           resp.onAfterReturn.setGlobals.daysStop = daysStop.join(", ");
         }
         if (${settings.startCron}) {
@@ -163,21 +163,21 @@ actions:
               d2 = new Date(d1.getTime() + offset),
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun2}, ${settings.mon2}, ${settings.tue2}, ${settings.wed2}, ${settings.thu2}, ${settings.fri2}, ${settings.sat2}], dd);              
-          resp.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+          resp.onAfterReturn.setGlobals.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
           var daysStart = [];
-          for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]-1]);
+          for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]]);
           resp.onAfterReturn.setGlobals.daysStart = daysStart.join(", ");
         }
         function getDays(settings, dd){
           var days = [];
-          for (var i = 0; i < settings.length; i++) if (settings[i]) days.push(i+1);
-          if (days.length < 7 && dd != 0) {
-            for (var i = 0; i < days.length; i++){
-              days[i] += dd;
-              if (days[i] < 1) days[i] +=7; else if (days[i] > 7) days[i] -=7;
+          for (var i = 0; i < settings.length; i++) {
+            if (settings[i]) {
+              var day = i + dd;
+              if (day < 0) day +=7; else if (day > 6) day -=7;
+              days.push(day);              
             }
-            days.sort();
           }
+          days.sort();
           return days;
         }        
         return resp;
@@ -200,8 +200,8 @@ actions:
       params:
         url: ${this:}
         name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"
-        start: "${response.start:}"
-        stop: "${response.stop:}"
+        start: "${globals.start:}"
+        stop: "${globals.stop:}"
     
   uninstall:
     script: |
