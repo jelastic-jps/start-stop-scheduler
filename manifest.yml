@@ -154,7 +154,7 @@ actions:
               days = getDays([${settings.sun1}, ${settings.mon1}, ${settings.tue1}, ${settings.wed1}, ${settings.thu1}, ${settings.fri1}, ${settings.sat1}], dd);              
           resp.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
           var daysStop = [];
-          for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]]);
+          for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]-1]);
           resp.onAfterReturn.setGlobals.daysStop = daysStop.join(", ");
         }
         if (${settings.startCron}) {
@@ -165,16 +165,16 @@ actions:
               days = getDays([${settings.sun2}, ${settings.mon2}, ${settings.tue2}, ${settings.wed2}, ${settings.thu2}, ${settings.fri2}, ${settings.sat2}], dd);              
           resp.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
           var daysStart = [];
-          for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]]);
+          for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]-1]);
           resp.onAfterReturn.setGlobals.daysStart = daysStart.join(", ");
         }
         function getDays(settings, dd){
           var days = [];
-          for (var i = 0; i < settings.length; i++) if (settings[i]) days.push(i);
+          for (var i = 0; i < settings.length; i++) if (settings[i]) days.push(i+1);
           if (days.length < 7 && dd != 0) {
             for (var i = 0; i < days.length; i++){
               days[i] += dd;
-              if (days[i] < 0) days[i] +=7; else if (days[i] > 6) days[i] -=7;
+              if (days[i] < 1) days[i] +=7; else if (days[i] > 7) days[i] -=7;
             }
             days.sort();
           }
