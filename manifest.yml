@@ -40,10 +40,6 @@ globals:
   
 settings:
   fields:  
-  - type: string
-    hidden: true
-    required: true
-    name: validator
   - caption: Stop 
     type: toggle
     name: stopCron
