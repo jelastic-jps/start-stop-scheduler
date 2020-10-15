@@ -35,108 +35,113 @@ onBeforeInit: |
       })
   return jps;
   
+globals:
+  success: success.md
+  
 settings:
   fields:  
   - caption: Stop 
     type: toggle
     name: stopCron
-    default: true
-    
-  - type: string
-    name: stopTime
-    caption: Time
-    inputType: time
-    default: "19:00"
-    cls: x-form-text
-    width: 120 
-
-  - caption: Days
-    type: compositefield
-    name: cf1
-    defaultMargins: 0 8 0 0
-    items:
-      - name: sun1
-        value: true
-        type: checkbox
-        caption: Sun
-      - name: mon1
-        value: true
-        type: checkbox
-        caption: Mon
-      - name: tue1
-        value: true
-        type: checkbox
-        caption: Tue
-      - name: wed1
-        value: true
-        type: checkbox
-        caption: Wed
-      - name: thu1
-        value: true
-        type: checkbox
-        caption: Thu
-      - name: fri1
-        value: true
-        type: checkbox
-        caption: Fri
-      - name: sat1
-        value: true
-        type: checkbox
-        caption: Sat
+    default: false
+    required: true
+    showIf:
+      true:
+      - type: string
+        name: stopTime
+        caption: Time
+        inputType: time
+        default: "19:00"
+        cls: x-form-text
+        width: 120
+      - caption: Days
+        type: compositefield
+        name: cf1
+        defaultMargins: 0 8 0 0
+        items:
+          - name: sun1
+            value: true
+            type: checkbox
+            caption: Sun
+          - name: mon1
+            value: true
+            type: checkbox
+            caption: Mon
+          - name: tue1
+            value: true
+            type: checkbox
+            caption: Tue
+          - name: wed1
+            value: true
+            type: checkbox
+            caption: Wed
+          - name: thu1
+            value: true
+            type: checkbox
+            caption: Thu
+          - name: fri1
+            value: true
+            type: checkbox
+            caption: Fri
+          - name: sat1
+            value: true
+            type: checkbox
+            caption: Sat
         
   - type: displayfield
         
   - caption: Start 
     type: toggle
     name: startCron
-    default: true
-        
-  - type: string
-    name: startTime
-    caption: Time
-    inputType: time
-    default: "09:00"
-    cls: x-form-text
-    width: 120 
+    default: false
+    required: true
+    showIf:
+      true:
+      - type: string
+        name: startTime
+        caption: Time
+        inputType: time
+        default: "09:00"
+        cls: x-form-text
+        width: 120 
 
-  - caption: Days
-    type: compositefield
-    name: cf3
-    defaultMargins: 0 8 0 0
-    items:
-      - name: sun2
-        value: true
-        type: checkbox
-        caption: Sun
-      - name: mon2
-        value: true
-        type: checkbox
-        caption: Mon
-      - name: tue2
-        value: true
-        type: checkbox
-        caption: Tue
-      - name: wed2
-        value: true
-        type: checkbox
-        caption: Wed
-      - name: thu2
-        value: true
-        type: checkbox
-        caption: Thu
-      - name: fri2
-        value: true
-        type: checkbox
-        caption: Fri
-      - name: sat2
-        value: true
-        type: checkbox
-        caption: Sat
+      - caption: Days
+        type: compositefield
+        name: cf3
+        defaultMargins: 0 8 0 0
+        items:
+          - name: sun2
+            value: true
+            type: checkbox
+            caption: Sun
+          - name: mon2
+            value: true
+            type: checkbox
+            caption: Mon
+          - name: tue2
+            value: true
+            type: checkbox
+            caption: Tue
+          - name: wed2
+            value: true
+            type: checkbox
+            caption: Wed
+          - name: thu2
+            value: true
+            type: checkbox
+            caption: Thu
+          - name: fri2
+            value: true
+            type: checkbox
+            caption: Fri
+          - name: sat2
+            value: true
+            type: checkbox
+            caption: Sat
         
   - caption: 
     type: displayfield
         
-
 onInstall: create
 onUninstall: uninstall
 onBeforeDelete: uninstall
@@ -168,6 +173,13 @@ actions:
           for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]]);
           resp.onAfterReturn.setGlobals.daysStart = daysStart.join(", ");
         }
+        if (${settings.stopCron} && (!${settings.startCron} || !daysStart)) {
+          resp.onAfterReturn.setGlobals.success = "success-nostart.md";
+        }
+        if ((!${settings.stopCron} || !daysStop) && ${settings.startCron}) {
+          resp.onAfterReturn.setGlobals.success = "success-nostop.md";
+        }
+
         function getDays(settings, dd){
           var days = [];
           for (var i = 0; i < settings.length; i++) {
@@ -212,10 +224,13 @@ actions:
         trigger: "once_delay:1000",
         params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
       })
+      
 buttons:
   settings: main
   caption: Configure
   loadingText: Updating...
   action: update
   successText: The scheduler has been successfully updated.
-success: /text/success.md
+  
+  
+success: /text/${globals.success}
