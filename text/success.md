@@ -1,4 +1,4 @@
-Environment **${env.domain}** will be stopped by **${settings.tz}** time at **${settings.stopTime}**  
+Environment **${env.domain}** will be stopped in **${settings.tz}** time zone at **${settings.stopTime}**  
  
 on **${globals.daysStop}**  
 
