@@ -142,8 +142,7 @@ settings:
   - caption: 
     type: displayfield
         
-onInstall: 
-  create
+onInstall: create
 onUninstall: uninstall
 onBeforeDelete: uninstall
 actions:
