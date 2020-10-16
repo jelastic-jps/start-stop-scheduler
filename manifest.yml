@@ -154,7 +154,7 @@ actions:
         if (${settings.stopCron}) {
           var time = "${settings.stopTime}".split(":"),   
               d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
-              d2 = new Date(d1.getTime() + offset),
+              d2 = new Date(d1.getTime() - offset),
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun1}, ${settings.mon1}, ${settings.tue1}, ${settings.wed1}, ${settings.thu1}, ${settings.fri1}, ${settings.sat1}], dd);              
           resp.onAfterReturn.setGlobals.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
@@ -165,7 +165,7 @@ actions:
         if (${settings.startCron}) {
           var time = "${settings.startTime}".split(":"),   
               d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
-              d2 = new Date(d1.getTime() + offset),
+              d2 = new Date(d1.getTime() - offset),
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun2}, ${settings.mon2}, ${settings.tue2}, ${settings.wed2}, ${settings.thu2}, ${settings.fri2}, ${settings.sat2}], dd);              
           resp.onAfterReturn.setGlobals.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
