@@ -142,7 +142,14 @@ settings:
   - caption: 
     type: displayfield
         
-onInstall: create
+onInstall: 
+  - if (!${settings.stopCron} || !${settings.sun1} && !${settings.mon1} && !${settings.wed1} && !${settings.thu1} && !${settings.fri1} && !${settings.sat1} ) && (!${settings.startCron} || !${settings.sun2} && !${settings.mon2} && !${settings.tue2} && !${settings.wed2} && !${settings.thu2} && !${settings.fri2} && !${settings.sat2}) :
+     stopEvent:
+       type: error
+       message: You haven't specified any parameters to start or stop your environment
+
+  - create
+  
 onUninstall: uninstall
 onBeforeDelete: uninstall
 actions:
