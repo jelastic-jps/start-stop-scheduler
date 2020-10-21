@@ -147,7 +147,6 @@ onInstall:
      stopEvent:
        type: error
        message: You haven't specified any parameters to start or stop your environment
-
   - create
   
 onUninstall: uninstall
@@ -212,6 +211,10 @@ actions:
         var body = new Transport().get(url);
         return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
   update:
+    - if (!${settings.stopCron} || !${settings.sun1} && !${settings.mon1} && !${settings.wed1} && !${settings.thu1} && !${settings.fri1} && !${settings.sat1} ) && (!${settings.startCron} || !${settings.sun2} && !${settings.mon2} && !${settings.tue2} && !${settings.wed2} && !${settings.thu2} && !${settings.fri2} && !${settings.sat2}) :
+        stopEvent:
+        type: error
+        message: You haven't specified any parameters to start or stop your environment
     - convert
     - execScript
   execScript:
