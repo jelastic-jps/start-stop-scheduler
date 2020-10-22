@@ -147,7 +147,7 @@ onBeforeDelete: uninstall
 actions:
   convert:
     - script: |
-        var resp = {result:0, onAfterReturn: {setGlobals:{}}}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset(),
+        var resp = {result:0, onAfterReturn: {setGlobals:{start: "", stop: "", daysStart: "", daysStop: ""}}}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset(),
             setGlobals = resp.onAfterReturn.setGlobals,
             dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             stopCron = ${settings.stopCron:false}, startCron = ${settings.startCron:false},
