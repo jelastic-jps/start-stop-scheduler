@@ -45,9 +45,6 @@ if (getParam('action') && getParam('action') == 'update') {
     return resp;
 }
 
-resp.appid = appid;
-resp.session = session;
-
 return resp;
 
 function addTask(cron, taskName) {
@@ -58,11 +55,7 @@ function addTask(cron, taskName) {
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        if (compareVersions(version, '5.3') >= 0 || version.indexOf('trunk') != -1) {
-            var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
-        } else {
-            var resp = jelastic.utils.scheduler.AddTask({appid: appid, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
-        }
+        var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
