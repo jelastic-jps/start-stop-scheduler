@@ -141,9 +141,6 @@ settings:
 
 onInstall:
   - create
-  - return:
-      type: success
-      message: /text/${globals.success}
 
 onUninstall: uninstall
 onBeforeDelete: uninstall
@@ -215,6 +212,7 @@ actions:
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
         return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
+ 
   update:
     - convert
     - execScript
@@ -243,3 +241,5 @@ buttons:
   loadingText: Updating...
   action: update
   successText: The scheduler has been successfully updated.
+
+success: /text/${globals.success}
