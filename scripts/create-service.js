@@ -5,7 +5,7 @@ import com.hivext.api.core.utils.Transport;
 
 var url = getParam('url'),
     description = "start-stop-scheduler",
-    resp, tasks, envName = '${env.envName}', envAppid = '${env.appid}', version;
+    resp, tasks, delTasks = [], envName = '${env.envName}', envAppid = '${env.appid}', version;
 
 version = jelastic.system.service.GetVersion().version.split("-").shift();
 
@@ -25,8 +25,10 @@ resp = jelastic.utils.scheduler.GetTasks({appid: appid, session: session});
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
-for (var i = 0, l = tasks.length; i < l; i++)
-if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask({appid: appid, session:session, id: tasks[i].id});
+for (var i = 0, l = tasks.length; i < l; i++) {
+    if (tasks[i].script == name) delTasks.push(tasks[i].id); 
+}
+if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({appid: appid, session:session, ids: delTasks});
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
