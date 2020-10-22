@@ -206,13 +206,11 @@ actions:
   create:
     - convert
     - execScript: "${baseUrl}/scripts/start-stop.js?r_${fn.random}"
-    - setGlobals:
-        appid: ${response.appid}
     - script: |
         import com.hivext.api.core.utils.Transport;
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
-        return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
+        return jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
   update:
     - if (!${settings.stopCron} || !${settings.sun1} && !${settings.mon1} && !${settings.wed1} && !${settings.thu1} && !${settings.fri1} && !${settings.sat1} ) && (!${settings.startCron} || !${settings.sun2} && !${settings.mon2} && !${settings.tue2} && !${settings.wed2} && !${settings.thu2} && !${settings.fri2} && !${settings.sat2}) :
         stopEvent:
@@ -234,11 +232,13 @@ actions:
     
   uninstall:
     script: |
-      return jelastic.utils.scheduler.AddTask({
-        appid: '${globals.appid}',
+      return jelastic.utils.scheduler.CreateEnvTask({
+        appid: appid,
         session: session,
-        script: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop',
+        envName: "${env.envName}", 
+        script: "uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop",
         trigger: "once_delay:1000",
+        description: "uninstall start-stop addon tasks for ${env.envName}",
         params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
       })
       
