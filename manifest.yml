@@ -156,7 +156,7 @@ actions:
         if (stopCron) {
           var time = "${settings.stopTime}".split(":"),
               d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
-              d2 = new Date(d1.getTime() + offset),
+              d2 = new Date(d1.getTime() - offset),
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun1:0}, ${settings.mon1:0}, ${settings.tue1:0}, ${settings.wed1:0}, ${settings.thu1:0}, ${settings.fri1:0}, ${settings.sat1:0}], dd);
           for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]]);
@@ -169,7 +169,7 @@ actions:
         if (startCron) {
           var time = "${settings.startTime}".split(":"),
               d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
-              d2 = new Date(d1.getTime() + offset),
+              d2 = new Date(d1.getTime() - offset),
               dd = d2.getDate() - d1.getDate(),
               days = getDays([${settings.sun2:0}, ${settings.mon2:0}, ${settings.tue2:0}, ${settings.wed2:0}, ${settings.thu2:0}, ${settings.fri2:0}, ${settings.sat2:0}], dd);
           for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]]);
@@ -187,7 +187,7 @@ actions:
         } else if (!stopCron && !startCron) {
           success = "success-start-stop-disabled.md"
         }
-        
+
         setGlobals.success = success || "success.md";
 
         function getDays(settings, dd) {
@@ -211,8 +211,7 @@ actions:
         import com.hivext.api.core.utils.Transport;
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
-        return  jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
- 
+        return jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
   update:
     - convert
     - execScript
@@ -227,11 +226,13 @@ actions:
 
   uninstall:
     script: |
-      return jelastic.utils.scheduler.AddTask({
+      return jelastic.utils.scheduler.CreateEnvTask({
         appid: appid,
         session: session,
-        script: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop',
+        envName: "${env.envName}",
+        script: "uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop",
         trigger: "once_delay:1000",
+        description: "uninstall start-stop addon tasks for ${env.envName}",
         params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
       })
 
