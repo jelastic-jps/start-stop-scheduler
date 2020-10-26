@@ -41,7 +41,6 @@ settings:
       type: toggle
       name: stopCron
       default: false
-      required: true
       showIf:
         true:
           - type: string
@@ -51,47 +50,47 @@ settings:
             default: "19:00"
             cls: x-form-text
             width: 120
+            required: true
           - caption: Days
             type: compositefield
             name: cf1
-            defaultMargins: 0 8 0 0
+            defaultMargins: 0 12 0 0
             items:
               - name: sun1
                 value: true
                 type: checkbox
-                caption: Sun
+                caption: Su
               - name: mon1
                 value: true
                 type: checkbox
-                caption: Mon
+                caption: Mo
               - name: tue1
                 value: true
                 type: checkbox
-                caption: Tue
+                caption: Tu
               - name: wed1
                 value: true
                 type: checkbox
-                caption: Wed
+                caption: We
               - name: thu1
                 value: true
                 type: checkbox
-                caption: Thu
+                caption: Th
               - name: fri1
                 value: true
                 type: checkbox
-                caption: Fri
+                caption: Fr
               - name: sat1
                 value: true
                 type: checkbox
-                caption: Sat
+                caption: Sa
 
-    - type: displayfield
+    - type: spacer
 
     - caption: Start
       type: toggle
       name: startCron
       default: false
-      required: true
       showIf:
         true:
           - type: string
@@ -101,43 +100,42 @@ settings:
             default: "09:00"
             cls: x-form-text
             width: 120
-
+            required: true
           - caption: Days
             type: compositefield
             name: cf3
-            defaultMargins: 0 8 0 0
+            defaultMargins: 0 12 0 0
             items:
               - name: sun2
                 value: true
                 type: checkbox
-                caption: Sun
+                caption: Su
               - name: mon2
                 value: true
                 type: checkbox
-                caption: Mon
+                caption: Mo
               - name: tue2
                 value: true
                 type: checkbox
-                caption: Tue
+                caption: Tu
               - name: wed2
                 value: true
                 type: checkbox
-                caption: Wed
+                caption: We
               - name: thu2
                 value: true
                 type: checkbox
-                caption: Thu
+                caption: Th
               - name: fri2
                 value: true
                 type: checkbox
-                caption: Fri
+                caption: Fr
               - name: sat2
                 value: true
                 type: checkbox
-                caption: Sat
+                caption: Sa
 
-    - caption:
-      type: displayfield
+    - type: spacer
 
 onInstall:
   - create
@@ -149,7 +147,7 @@ actions:
     - script: |
         var resp = {result:0, onAfterReturn: {setGlobals:{start: "", stop: "", daysStart: "", daysStop: ""}}}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset(),
             setGlobals = resp.onAfterReturn.setGlobals,
-            dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
             stopCron = ${settings.stopCron:false}, startCron = ${settings.startCron:false},
             daysStart = [], daysStop = [], success;
         
