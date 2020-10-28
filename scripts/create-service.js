@@ -14,21 +14,21 @@ if (url) {
     var body = new Transport().get(url);
 
     //delete the script if it exists already
-    jelastic.dev.scripting.DeleteScript({${globals.appid}, session: session, name:name});
+    jelastic.dev.scripting.DeleteScript({appid: "${globals.appid}", session: session, name:name});
 
     //create a new script 
-    resp = jelastic.dev.scripting.CreateScript({${globals.appid}, session: session, name: name, type: 'js', code: body});
+    resp = jelastic.dev.scripting.CreateScript({appid: "${globals.appid}", session: session, name: name, type: 'js', code: body});
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
-resp = jelastic.utils.scheduler.GetTasks({${globals.appid}, session: session});
+resp = jelastic.utils.scheduler.GetTasks({appid: "${globals.appid}", session: session});
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
 for (var i = 0, l = tasks.length; i < l; i++) {
     if (tasks[i].script == name) delTasks.push(tasks[i].id); 
 }
-if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({${globals.appid}, session:session, ids: delTasks});
+if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({appid: "${globals.appid}", session:session, ids: delTasks});
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
@@ -57,7 +57,7 @@ function addTask(cron, taskName) {
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        var resp = jelastic.utils.scheduler.CreateEnvTask({${globals.appid}, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
+        var resp = jelastic.utils.scheduler.CreateEnvTask({appid: "${globals.appid}", envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
