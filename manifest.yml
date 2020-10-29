@@ -210,7 +210,7 @@ actions:
         import com.hivext.api.core.utils.Transport;
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
-        return jelastic.dev.scripting.CreateScript({appid: "${globals.appid}", session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
+        return jelastic.dev.scripting.CreateScript({appid: appid + "/${globals.appid}", session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
   update:
     - convert
     - execScript
@@ -226,7 +226,7 @@ actions:
   uninstall:
     script: |
       return jelastic.utils.scheduler.CreateEnvTask({
-        appid: "${globals.appid}",
+        appid: appid + "/${globals.appid}",
         session: session,
         envName: "${env.envName}",
         script: "uninstall-${env.envName}-start-stop",
