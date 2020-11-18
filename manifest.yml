@@ -1,7 +1,7 @@
 type: update
 id: start-stop-scheduler
 logo: /images/logo.png
-baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/master
+baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/v2.0.0
 description:
   text: "A simple weekly scheduler to automatically start and stop the environment within the specified Time Zone"
   short: The scheduler for automatic environment hibernation and wake-up
