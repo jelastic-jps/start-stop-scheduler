@@ -27,7 +27,9 @@ Within the installation frame:
 - choose the target environment that should be managed by add-on in the **Environment name** field
 - if required in the [Nodes](https://docs.jelastic.com/jelastic-basic-hosting-concepts#layer) field get a node the add-on will be applied to or leave unchanged as it was fetched upon selecting the environment  
 
-> **Note** that the current scheduler implementation implies the complete stop of all containers in the destination environment (rather than container [hibernation](https://docs.jelastic.com/resources-utilization), which can be automatically interrupted upon any incoming request); thus, all the corresponding environment services will remain unavailable until it is launched again, either by the scheduler or manually.            
+> **Note** that the current scheduler implementation implies:
+  - the complete stop of all containers in the destination environment (rather than container [hibernation](https://docs.jelastic.com/resources-utilization), which can be automatically interrupted upon any incoming request); thus, all the corresponding environment services will remain unavailable until it is launched again, either by the scheduler or manually  
+  - in case the destination environment is shared for collaboration, the only one collaborator may install and run the add-on on it.  So, avoid situations when first collaborator installs add-on and second one configures it and vice versa  
 
 Click **Install** to initiate the scheduler integration.
 
