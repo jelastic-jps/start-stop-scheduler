@@ -1,6 +1,6 @@
 # Environment Start/Stop Scheduler Add-On
 
-![scheduler-logo](images/scheduler-logo.png)
+![scheduler-logo](../v2.0.0/images/scheduler-logo.png)
 
 The **Env Start/Stop Scheduler** add-on is intended to automatically shut down and relaunch an environment based on the prescribed timing instructions. The schedule is tied to the [Time Zones](https://en.wikipedia.org/wiki/Time_zone).  Such automated environment lifecycle management allows to cut spends on testing and dev projects by turning them off when no development is carried out (e.g. during nighttime or weekend).
 
@@ -13,7 +13,7 @@ For more information about [Jelastic Add-Ons](https://github.com/jelastic-jps/jp
 Copy link to the **_manifest.jps_** file above and [import](https://docs.jelastic.com/environment-import) it to your Jelastic dashboard (or, alternatively, locate and launch this package via [Jelastic Marketplace](https://docs.jelastic.com/marketplace)).
 
 <p align="left"> 
-<img src="images/install.png" width="500">
+<img src="../v2.0.0/images/install.png" width="500">
 </p>
 
 Within the installation frame:
@@ -37,7 +37,7 @@ Click **Install** to initiate the scheduler integration.
 The installation results in the confirmation window:
 
 <p align="left"> 
-<img src="images/success.png" width="400">
+<img src="../v2.0.0/images/success.png" width="400">
 </p>
 
 ## Managing Start/Stop Scheduler
@@ -45,7 +45,7 @@ The installation results in the confirmation window:
 In case you need to change the initial *Stop* and *Start* trigger conditions, click the **Add-ons** button next to the server it was installed to and select **Configure** at the appropriate scheduler plank (alternatively, the same could be applied with add-on re-installation).
 
 <p align="left"> 
-<img src="images/configuration.png" width="500">
+<img src="../v2.0.0/images/configuration.png" width="500">
 </p>
 
 In case this solution is not needed any more, use the menu at the top-right corner of the same plank to **Uninstall** it.
