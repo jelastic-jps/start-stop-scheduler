@@ -1,0 +1,244 @@
+type: update
+id: start-stop-scheduler
+logo: /images/logo.png
+baseUrl: https://raw.githubusercontent.com/sych74/start-stop-scheduler/master
+description:
+  text: "A simple weekly scheduler to automatically start and stop the environment within the specified Time Zone"
+  short: The scheduler for automatic environment hibernation and wake-up
+name: Env Start/Stop Scheduler
+targetNodes:
+  nodeGroup: '*'
+onBeforeInit: |
+  import java.util.TimeZone;
+  var zones = toNative(TimeZone.getAvailableIDs());
+  var values = {};
+
+  for (var i = 0, n = zones.length; i < n; i++) {
+    var offset = TimeZone.getTimeZone(zones[i]).getRawOffset()/3600000;
+    var m = offset % 1;
+    if (m != 0) m = Math.abs(m * 60);
+    if (m < 10) m = "0" + m;
+    var h = Math.floor(offset);
+    if (Math.abs(h) < 10) h = h < 0 ? "-0" + Math.abs(h) : "+0" + h; else if (h >= 0) h = "+" + h;
+    values[zones[i]] = zones[i] + (zones[i] == "GMT" ? "" : " (GMT" + h + ":" + m + ")");
+  }
+
+  jps.settings.fields.push({
+        name: "tz",
+        caption: "Time Zone",
+        type: "list",
+        required: true,
+        width: 250,
+        editable: true,
+        values: values,
+        default: TimeZone.getDefault().getID()
+      })
+  return jps;
+
+settings:
+  fields:
+    - caption: Stop
+      type: toggle
+      name: stopCron
+      default: false
+      showIf:
+        true:
+          - type: string
+            name: stopTime
+            caption: Time
+            inputType: time
+            default: "19:00"
+            cls: x-form-text
+            width: 120
+            required: true
+          - caption: Days
+            type: compositefield
+            name: cf1
+            defaultMargins: 0 12 0 0
+            items:
+              - name: sun1
+                value: true
+                type: checkbox
+                caption: Su
+              - name: mon1
+                value: true
+                type: checkbox
+                caption: Mo
+              - name: tue1
+                value: true
+                type: checkbox
+                caption: Tu
+              - name: wed1
+                value: true
+                type: checkbox
+                caption: We
+              - name: thu1
+                value: true
+                type: checkbox
+                caption: Th
+              - name: fri1
+                value: true
+                type: checkbox
+                caption: Fr
+              - name: sat1
+                value: true
+                type: checkbox
+                caption: Sa
+
+    - type: spacer
+
+    - caption: Start
+      type: toggle
+      name: startCron
+      default: false
+      showIf:
+        true:
+          - type: string
+            name: startTime
+            caption: Time
+            inputType: time
+            default: "09:00"
+            cls: x-form-text
+            width: 120
+            required: true
+          - caption: Days
+            type: compositefield
+            name: cf3
+            defaultMargins: 0 12 0 0
+            items:
+              - name: sun2
+                value: true
+                type: checkbox
+                caption: Su
+              - name: mon2
+                value: true
+                type: checkbox
+                caption: Mo
+              - name: tue2
+                value: true
+                type: checkbox
+                caption: Tu
+              - name: wed2
+                value: true
+                type: checkbox
+                caption: We
+              - name: thu2
+                value: true
+                type: checkbox
+                caption: Th
+              - name: fri2
+                value: true
+                type: checkbox
+                caption: Fr
+              - name: sat2
+                value: true
+                type: checkbox
+                caption: Sa
+
+    - type: spacer
+
+onInstall:
+  - create
+
+onUninstall: uninstall
+onBeforeDelete: uninstall
+actions:
+  convert:
+    - script: |
+        var resp = {result:0, onAfterReturn: {setGlobals:{start: "", stop: "", daysStart: "", daysStop: ""}}}, offset = java.util.TimeZone.getTimeZone("${settings.tz}").getRawOffset(),
+            setGlobals = resp.onAfterReturn.setGlobals,
+            dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+            stopCron = ${settings.stopCron:false}, startCron = ${settings.startCron:false},
+            daysStart = [], daysStop = [], success;
+        
+        if (stopCron) {
+          var time = "${settings.stopTime}".split(":"),
+              d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
+              d2 = new Date(d1.getTime() - offset),
+              dd = d2.getDate() - d1.getDate(),
+              days = getDays([${settings.sun1:0}, ${settings.mon1:0}, ${settings.tue1:0}, ${settings.wed1:0}, ${settings.thu1:0}, ${settings.fri1:0}, ${settings.sat1:0}], dd);
+          for (var i = 0; i < days.length; i++) daysStop.push(dayNames[days[i]]);
+          stopCron = (daysStop.length != 0);
+          if (stopCron) {
+            setGlobals.stop = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+            setGlobals.daysStop = daysStop.join(", ");
+          }
+        }
+        if (startCron) {
+          var time = "${settings.startTime}".split(":"),
+              d1 = new Date(2020, 1, 10, parseInt(time[0],10), parseInt(time[1],10)),
+              d2 = new Date(d1.getTime() - offset),
+              dd = d2.getDate() - d1.getDate(),
+              days = getDays([${settings.sun2:0}, ${settings.mon2:0}, ${settings.tue2:0}, ${settings.wed2:0}, ${settings.thu2:0}, ${settings.fri2:0}, ${settings.sat2:0}], dd);
+          for (var i = 0; i < days.length; i++) daysStart.push(dayNames[days[i]]);
+          startCron = (daysStart.length != 0);
+          if (startCron) {
+            setGlobals.start = d2.getMinutes() + " " + d2.getHours() + " * * " + days.join(",");
+            setGlobals.daysStart = daysStart.join(", ");
+          }
+        }
+
+        if (stopCron && !startCron) {
+          success = "success-nostart.md";
+        } else if (startCron && !stopCron) {
+          success = "success-nostop.md";
+        } else if (!stopCron && !startCron) {
+          success = "success-start-stop-disabled.md"
+        }
+
+        setGlobals.success = success || "success.md";
+
+        function getDays(settings, dd) {
+          var days = [];
+          for (var i = 0, n = settings.length; i < n; i++) {
+            if (settings[i]) {
+              var day = i + dd;
+              if (day < 0) day +=7; else if (day > 6) day -=7;
+              days.push(day);
+            }
+          }
+          days.sort();
+          return days;
+        }
+        return resp;
+
+  create:
+    - convert
+    - execScript: "${baseUrl}/scripts/start-stop.js?r_${fn.random}"
+    - script: |
+        import com.hivext.api.core.utils.Transport;
+        var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
+        var body = new Transport().get(url);
+        return jelastic.dev.scripting.CreateScript({appid: appid, session: session, name: 'uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop', type: 'js', code: body});
+  update:
+    - convert
+    - execScript
+
+  execScript:
+    - script: "/scripts/create-service.js?r_${fn.random}"
+      params:
+        url: ${this:}
+        name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"
+        start: "${globals.start:}"
+        stop: "${globals.stop:}"
+
+  uninstall:
+    script: |
+      return jelastic.utils.scheduler.CreateEnvTask({
+        appid: appid,
+        session: session,
+        envName: "${env.envName}",
+        script: "uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop",
+        trigger: "once_delay:1000",
+        description: "uninstall start-stop addon tasks for ${env.envName}",
+        params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
+      })
+
+buttons:
+  settings: main
+  caption: Configure
+  loadingText: Updating...
+  action: update
+  successText: The scheduler has been successfully updated.
+
+success: /text/${globals.success}

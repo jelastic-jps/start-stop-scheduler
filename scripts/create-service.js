@@ -5,7 +5,7 @@ import com.hivext.api.core.utils.Transport;
 
 var url = getParam('url'),
     description = "start-stop-scheduler",
-    resp, tasks, envName = '${env.envName}', envAppid = '${env.appid}', version;
+    resp, tasks, delTasks = [], envName = '${env.envName}', envAppid = '${env.appid}', version;
 
 version = jelastic.system.service.GetVersion().version.split("-").shift();
 
@@ -25,8 +25,10 @@ resp = jelastic.utils.scheduler.GetTasks({appid: appid, session: session});
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
-for (var i = 0, l = tasks.length; i < l; i++)
-if (tasks[i].script == name) jelastic.utils.scheduler.RemoveTask({appid: appid, session:session, id: tasks[i].id});
+for (var i = 0, l = tasks.length; i < l; i++) {
+    if (tasks[i].script == name) delTasks.push(tasks[i].id); 
+}
+if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({appid: appid, session:session, ids: delTasks});
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
@@ -45,9 +47,6 @@ if (getParam('action') && getParam('action') == 'update') {
     return resp;
 }
 
-resp.appid = appid;
-resp.session = session;
-
 return resp;
 
 function addTask(cron, taskName) {
@@ -58,11 +57,7 @@ function addTask(cron, taskName) {
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        if (compareVersions(version, '5.3') >= 0 || version.indexOf('trunk') != -1) {
-            var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
-        } else {
-            var resp = jelastic.utils.scheduler.AddTask({appid: appid, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
-        }
+        var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
