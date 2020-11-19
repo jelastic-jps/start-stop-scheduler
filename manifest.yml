@@ -30,8 +30,7 @@ onBeforeInit: |
         required: true,
         width: 250,
         editable: true,
-        values: values,
-        default: TimeZone.getDefault().getID()
+        values: values
       })
   return jps;
 
