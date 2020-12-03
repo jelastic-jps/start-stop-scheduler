@@ -232,7 +232,7 @@ actions:
         script: "uninstall-${env.envName}-${targetNodes.nodeGroup}-start-stop",
         trigger: "once_delay:1000",
         description: "uninstall start-stop addon tasks for ${env.envName}",
-        params: {name: "${env.envName}-start-stop"}
+        params: {name: "${env.envName}-${targetNodes.nodeGroup}-start-stop"}
       })
 
 buttons:
