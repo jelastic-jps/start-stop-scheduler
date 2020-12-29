@@ -30,7 +30,7 @@ onBeforeInit: |
         type: "list",
         required: true,
         width: 250,
-        editable: true,
+        editable: false,
         values: values
       })
   return { result: 0, settings: jps.settings };
