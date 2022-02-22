@@ -1,6 +1,7 @@
 type: update
 id: start-stop-scheduler
 jpsVersion: 0.2
+targetEditions: any
 logo: /images/logo.png
 baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/v2.0.0
 description:
