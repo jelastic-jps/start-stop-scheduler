@@ -138,7 +138,9 @@ settings:
     - type: spacer
 
 onInstall:
-  - script: return {result:0, onAfterReturn:{setGlobals:{appid:appid}}}
+  - script: |
+      var appid = (${fn.compareEngine(8.4-1)} == 1) ? "${env.appid}" : appid + "/${globals.appid}";
+      return {result:0, onAfterReturn:{setGlobals:{appid:appid}}}
   - create
 
 onUninstall: uninstall
@@ -210,7 +212,7 @@ actions:
         import com.hivext.api.core.utils.Transport;
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
-        return jelastic.dev.scripting.CreateScript({appid: appid + "/${globals.appid}", session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
+        return jelastic.dev.scripting.CreateScript({appid: "${globals.appid}", session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
   update:
     - convert
     - execScript
@@ -226,7 +228,7 @@ actions:
   uninstall:
     script: |
       return jelastic.utils.scheduler.CreateEnvTask({
-        appid: appid + "/${globals.appid}",
+        appid: "${globals.appid}",
         session: session,
         envName: "${env.envName}",
         script: "uninstall-${env.envName}-start-stop",
