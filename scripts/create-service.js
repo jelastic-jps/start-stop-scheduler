@@ -5,30 +5,31 @@ import com.hivext.api.core.utils.Transport;
 
 var url = getParam('url'),
     description = "start-stop-scheduler",
-    resp, tasks, delTasks = [], envName = '${env.envName}', envAppid = '${env.appid}', version;
+    resp, tasks, delTasks = [], envName = '${env.envName}', version;
 
 version = jelastic.system.service.GetVersion().version.split("-").shift();
+var appidValue = (${fn.compareEngine(8.4-1)} >= 1) ? "${env.appid}" : appid + "/${globals.appid}";
 
 if (url) {
     //reading script from URL
     var body = new Transport().get(url);
 
     //delete the script if it exists already
-    jelastic.dev.scripting.DeleteScript({appid: appid + "/${globals.appid}", session: session, name:name});
+    jelastic.dev.scripting.DeleteScript({appid: appidValue, session: session, name:name});
 
     //create a new script 
-    resp = jelastic.dev.scripting.CreateScript({appid: appid + "/${globals.appid}", session: session, name: name, type: 'js', code: body});
+    resp = jelastic.dev.scripting.CreateScript({appid: appidValue, session: session, name: name, type: 'js', code: body});
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
-resp = jelastic.utils.scheduler.GetTasks({appid: appid + "/${globals.appid}", session: session});
+resp = jelastic.utils.scheduler.GetTasks({appid: appidValue, session: session});
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
 for (var i = 0, l = tasks.length; i < l; i++) {
-    if (tasks[i].script == name) delTasks.push(tasks[i].id); 
+    if (tasks[i].script == name) delTasks.push(tasks[i].id);
 }
-if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({appid: appid + "/${globals.appid}", session:session, ids: delTasks});
+if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({appid: appidValue, session:session, ids: delTasks});
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
@@ -57,10 +58,10 @@ function addTask(cron, taskName) {
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid + "/${globals.appid}", envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
+        var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appidValue, envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params})
         if (resp.result != 0) return buildErrorMessage(resp)
     }
-    
+
     return {result: 0}
 }
 
@@ -71,10 +72,10 @@ function buildErrorMessage(resp) {
 }
 
 function compareVersions(a, b) {
-   a = a.split("."), b = b.split(".")
-   for (var i = 0, l = Math.max(a.length, b.length); i < l; i++) {x = parseInt(a[i], 10) || 0; y = parseInt(b[i], 10) || 0; if (x != y) return x > y ? 1 : -1 }
-   return 0;
- }
+    a = a.split("."), b = b.split(".")
+    for (var i = 0, l = Math.max(a.length, b.length); i < l; i++) {x = parseInt(a[i], 10) || 0; y = parseInt(b[i], 10) || 0; if (x != y) return x > y ? 1 : -1 }
+    return 0;
+}
 
 function convert(cron) {
     //conversion is based on https://github.com/lirantal/cron-to-quartz
@@ -85,16 +86,16 @@ function convert(cron) {
      */
     var C2Q = {};
 
-    /** 
+    /**
      * Get a Quartz CRON notation from provided Unix CRON syntax
      * getQuartz
      *
      * Expects to get a Unix CRON syntax format, for example: 00 11,13 * * *
-     * 
+     *
      * @param {string} unix CRON format
      * @return {array} array of arrays
      *   for example:
-     *    [ 
+     *    [
      *     ['0', '00', '11,13', '*', '*', '?', '*' ]
      *    ]
      *
@@ -165,7 +166,7 @@ function convert(cron) {
     }
 
     /**
-     * parse cron 
+     * parse cron
      * parseCronMagics
      *
      * @param {string} a string representation of a unix CRON entry
