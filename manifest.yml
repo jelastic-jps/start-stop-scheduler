@@ -139,8 +139,8 @@ settings:
 
 onInstall:
   - script: |
-      var appid = (${fn.compareEngine(8.4-1)} == 1) ? "${env.appid}" : appid + "/${globals.appid}";
-      return {result:0, onAfterReturn:{setGlobals:{appid:appid}}}
+      var appidValue = (${fn.compareEngine(8.4-1)} >= 1) ? "${env.appid}" : appid;
+      return {result:0, onAfterReturn: {setGlobals: { appid:appidValue }}}
   - create
 
 onUninstall: uninstall
