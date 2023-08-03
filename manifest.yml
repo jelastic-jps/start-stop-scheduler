@@ -139,7 +139,7 @@ settings:
 
 onInstall:
   - script: |
-      var appidValue = (${fn.compareEngine(8.4-1)} >= 1) ? "${env.appid}" : appid;
+      var appidValue = api.dev.apps.CreatePersistence ? "${env.appid}" : appid;
       return {result:0, onAfterReturn: {setGlobals: { appid:appidValue }}}
   - create
 
