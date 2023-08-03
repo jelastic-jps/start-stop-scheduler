@@ -8,7 +8,7 @@ var url = getParam('url'),
     resp, tasks, delTasks = [], envName = '${env.envName}', version;
 
 version = jelastic.system.service.GetVersion().version.split("-").shift();
-var appidValue = (${fn.compareEngine(8.4-1)} >= 1) ? "${env.appid}" : appid + "/${globals.appid}";
+var appidValue = api.dev.apps.CreatePersistence ? "${env.appid}" : appid + "/${globals.appid}";
 
 if (url) {
     //reading script from URL
