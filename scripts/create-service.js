@@ -8,7 +8,7 @@ var url = getParam('url'),
     resp, tasks, delTasks = [], envName = '${env.envName}', version;
 
 version = api.system.service.GetVersion().version.split("-").shift();
-var appidValue = api.dev.apps.CreatePersistence ? "${env.appid}" : appid + "/${globals.appid}";
+var targetAppid = "${globals.appid}";
 
 if (url) {
     //reading script from URL
