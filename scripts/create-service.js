@@ -7,7 +7,7 @@ var url = getParam('url'),
     description = "start-stop-scheduler",
     resp, tasks, delTasks = [], envName = '${env.envName}', version;
 
-version = jelastic.system.service.GetVersion().version.split("-").shift();
+version = api.system.service.GetVersion().version.split("-").shift();
 var appidValue = api.dev.apps.CreatePersistence ? "${env.appid}" : appid + "/${globals.appid}";
 
 if (url) {
