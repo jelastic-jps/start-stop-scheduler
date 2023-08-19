@@ -22,7 +22,7 @@ if (url) {
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
-resp = jelastic.utils.scheduler.GetTasks({appid: appidValue, session: session});
+resp = api.utils.scheduler.GetTasks({ appid: targetAppid });
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
