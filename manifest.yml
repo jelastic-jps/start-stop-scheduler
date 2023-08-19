@@ -139,7 +139,7 @@ settings:
 
 onInstall:
   - script: |
-      var appidValue = api.dev.apps.CreatePersistence ? "${env.appid}" : appid;
+      var targetAppid = api.dev.apps.CreatePersistence ? "${env.appid}" : appid;
       return {result:0, onAfterReturn: {setGlobals: { appid:appidValue }}}
   - create
 
