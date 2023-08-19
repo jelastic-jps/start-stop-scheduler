@@ -18,7 +18,7 @@ if (url) {
     api.dev.scripting.DeleteScript({ appid: targetAppid, name:name });
 
     //create a new script 
-    resp = jelastic.dev.scripting.CreateScript({appid: appidValue, session: session, name: name, type: 'js', code: body});
+    resp = api.dev.scripting.CreateScript({ appid: targetAppid, name: name, type: 'js', code: body });
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
