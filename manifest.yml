@@ -140,7 +140,7 @@ settings:
 onInstall:
   - script: |
       var targetAppid = api.dev.apps.CreatePersistence ? "${env.appid}" : appid;
-      return {result:0, onAfterReturn: {setGlobals: { appid:appidValue }}}
+      return { result: 0, onAfterReturn: { setGlobals: { appid: targetAppid }}}
   - create
 
 onUninstall: uninstall
