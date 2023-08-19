@@ -212,7 +212,7 @@ actions:
         import com.hivext.api.core.utils.Transport;
         var url = "${baseUrl}/scripts/uninstall.js?r_${fn.random}"
         var body = new Transport().get(url);
-        return jelastic.dev.scripting.CreateScript({appid: "${globals.appid}", session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
+        return api.dev.scripting.CreateScript({appid: "${globals.appid}", session: session, name: 'uninstall-${env.envName}-start-stop', type: 'js', code: body});
   update:
     - convert
     - execScript
