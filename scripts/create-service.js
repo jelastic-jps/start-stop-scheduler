@@ -29,7 +29,7 @@ tasks = resp.objects;
 for (var i = 0, l = tasks.length; i < l; i++) {
     if (tasks[i].script == name) delTasks.push(tasks[i].id);
 }
-if (delTasks.length) jelastic.utils.scheduler.DeleteTasks({appid: appidValue, session:session, ids: delTasks});
+if (delTasks.length) api.utils.scheduler.DeleteTasks({ appid: targetAppid, ids: delTasks });
 
 var startCron = getParam('start'),
     stopCron = getParam('stop');
