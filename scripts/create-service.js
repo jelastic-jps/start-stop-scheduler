@@ -15,7 +15,7 @@ if (url) {
     var body = new Transport().get(url);
 
     //delete the script if it exists already
-    jelastic.dev.scripting.DeleteScript({appid: appidValue, session: session, name:name});
+    api.dev.scripting.DeleteScript({ appid: targetAppid, name:name });
 
     //create a new script 
     resp = jelastic.dev.scripting.CreateScript({appid: appidValue, session: session, name: name, type: 'js', code: body});
