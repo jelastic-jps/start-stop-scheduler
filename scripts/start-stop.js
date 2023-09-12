@@ -11,18 +11,20 @@ resp = c.GetEnvInfo(e, s);
 if (resp.result != 0) return resp;
 
 status = resp.env.status;
-
+api.marketplace.console.WriteLog("action->" + action);
 switch (action) {
     case 'start': 
         if (status == EnvironmentStatus[DOWN].getValue() || 
             status == EnvironmentStatus[SLEEP].getValue()) {
             result = c.StartEnv(e, s);
+            api.marketplace.console.WriteLog("StartEnv result->" + result);
             if (result != 0) return createRetryTask();
         }
         break;
     case 'stop': 
         if (status == EnvironmentStatus[RUNNING].getValue()) {
             result = c.StopEnv(e, s, -1);
+            api.marketplace.console.WriteLog("StopEnv result->" + result);
             if (result != 0) return createRetryTask();
         }
         break;
@@ -35,7 +37,8 @@ function createRetryTask() {
         action: action,
         envName: envName,
         envAppid: envAppid
-    })
+    });
+    api.marketplace.console.WriteLog("createRetryTask params->" + params);
     var targetAppid = api.dev.apps.CreatePersistence ? envAppid : appid;
     return jelastic.utils.scheduler.CreateEnvTask({
         appid: targetAppid,
