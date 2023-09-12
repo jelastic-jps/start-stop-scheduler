@@ -1,7 +1,7 @@
 //@auth @req(action, envName)
 import com.hivext.api.server.system.service.utils.EnvironmentStatus;
 
-var action = action + '', c = jelastic.env.control, e = envName, s = session, result, status, resp,
+var execAction = action + '', c = jelastic.env.control, e = envName, s = session, result, status, resp,
     DOWN = 'ENV_STATUS_TYPE_DOWN',
     SLEEP = 'ENV_STATUS_TYPE_SLEEP',
     RUNNING = 'ENV_STATUS_TYPE_RUNNING',
@@ -11,8 +11,8 @@ resp = c.GetEnvInfo(e, s);
 if (resp.result != 0) return resp;
 
 status = resp.env.status;
-api.marketplace.console.WriteLog("action->" + action);
-switch (action) {
+api.marketplace.console.WriteLog("action->" + execAction);
+switch (execAction) {
     case 'start': 
         if (status == EnvironmentStatus[DOWN].getValue() || 
             status == EnvironmentStatus[SLEEP].getValue()) {
@@ -29,12 +29,12 @@ switch (action) {
         }
         break;
     case 'sleep': result = c.SleepEnv(e, s); break;
-    default: result = {result: 99, error: 'unknown action [' + action + ']'}
+    default: result = {result: 99, error: 'unknown action [' + execAction + ']'}
 }
 
 function createRetryTask() {
     var params = toJSON({
-        action: action,
+        action: execAction,
         envName: envName,
         envAppid: envAppid
     });
@@ -53,5 +53,5 @@ function createRetryTask() {
 
 return result || {
     result: 0,
-    message: "Unable to " + action + " environment, status is "+ status
+    message: "Unable to " + execAction + " environment, status is "+ status
 };
