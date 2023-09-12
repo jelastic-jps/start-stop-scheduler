@@ -1,33 +1,54 @@
 //@auth @req(action, envName)
 import com.hivext.api.server.system.service.utils.EnvironmentStatus;
 
-var a = action + '', c = jelastic.env.control, e = envName, s = session, r, status, resp,
+var execAction = action + '', c = jelastic.env.control, e = envName, s = session, resp, status, resp,
     DOWN = 'ENV_STATUS_TYPE_DOWN',
     SLEEP = 'ENV_STATUS_TYPE_SLEEP',
-    RUNNING = 'ENV_STATUS_TYPE_RUNNING';
+    RUNNING = 'ENV_STATUS_TYPE_RUNNING',
+    description = "start-stop-scheduler";
 
 resp = c.GetEnvInfo(e, s);
 if (resp.result != 0) return resp;
 
 status = resp.env.status;
 
-switch (a) {
+switch (execAction) {
     case 'start': 
         if (status == EnvironmentStatus[DOWN].getValue() || 
             status == EnvironmentStatus[SLEEP].getValue()) {
-            r = c.StartEnv(e, s); 
+            resp = c.StartEnv(e, s);
+            if (resp.result != 0) return createRetryTask();
         }
         break;
     case 'stop': 
         if (status == EnvironmentStatus[RUNNING].getValue()) {
-            r = c.StopEnv(e, s, -1);
+            resp = c.StopEnv(e, s, -1);
+            if (resp.result != 0) return createRetryTask();
         }
         break;
-    case 'sleep': r = c.SleepEnv(e, s); break;
-    default: r = {result: 99, error: 'unknown action [' + a + ']'}
+    case 'sleep': resp = c.SleepEnv(e, s); break;
+    default: resp = {result: 99, error: 'unknown action [' + execAction + ']'}
 }
 
-return r || {
+function createRetryTask() {
+    var params = toJSON({
+        action: execAction,
+        envName: envName,
+        envAppid: envAppid
+    });
+
+    return jelastic.utils.scheduler.CreateEnvTask({
+        appid: api.dev.apps.CreatePersistence ? envAppid : appid,
+        envName: envName,
+        session: session,
+        script: name + "-start-stop",
+        trigger: "once_delay:10000",
+        description: description,
+        params: params
+    });
+}
+
+return resp || {
     result: 0,
-    message: "Unable to " + a + " environment, status is "+ status 
+    message: "Unable to " + execAction + " environment, status is "+ status
 };
