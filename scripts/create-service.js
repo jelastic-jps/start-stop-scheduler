@@ -53,11 +53,21 @@ function addTask(cron, taskName) {
     var quartz = convert(cron);
     var params = toJSON({
         action: taskName,
-        envName: envName
+        envName: envName,
+        envAppid: "${env.appid}",
+        retryTime: "${fn.random(5000,60000)}"
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
-        var resp = jelastic.utils.scheduler.CreateEnvTask({appid: appid + "/${globals.appid}", envName: envName, session: session, script: name, trigger: "cron:" + quartz[i], description: description, params: params}) 
+        var resp = jelastic.utils.scheduler.CreateEnvTask({
+            appid: appid + "/${globals.appid}",
+            envName: envName,
+            session: session,
+            script: name,
+            trigger: "cron:" + quartz[i],
+            description: description,
+            params: params
+        });
         if (resp.result != 0) return buildErrorMessage(resp)
     }
     
