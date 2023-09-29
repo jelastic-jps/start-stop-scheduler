@@ -36,6 +36,7 @@ var startCron = getParam('start'),
 
 if (startCron) {
     resp = addTask(startCron, 'start')
+    api.marketplace.console.WriteLog("addTask resp->" + resp);
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
@@ -58,7 +59,9 @@ function addTask(cron, taskName) {
     });
 
     for (var i = 0, l = quartz.length; i < l; i++) {
+        api.marketplace.console.WriteLog("CreateEnvTask targetAppid->" + targetAppid);
         var resp = api.utils.scheduler.CreateEnvTask({ appid: targetAppid, envName: envName, script: name, trigger: "cron:" + quartz[i], description: description, params: params });
+        api.marketplace.console.WriteLog("CreateEnvTask resp->" + resp);
         if (resp.result != 0) return buildErrorMessage(resp)
     }
 
