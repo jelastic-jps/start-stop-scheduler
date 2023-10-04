@@ -14,15 +14,18 @@ if (url) {
     //reading script from URL
     var body = new Transport().get(url);
 
+    api.marketplace.console.WriteLog("body" + body);
     //delete the script if it exists already
     api.dev.scripting.DeleteScript({ appid: targetAppid, name:name });
 
     //create a new script 
     resp = api.dev.scripting.CreateScript({ appid: targetAppid, name: name, type: 'js', code: body });
+    api.marketplace.console.WriteLog("CreateScript resp->" + resp);
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
 resp = api.utils.scheduler.GetTasks({ appid: targetAppid });
+api.marketplace.console.WriteLog("GetTasks resp->" + resp);
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
