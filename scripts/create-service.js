@@ -23,12 +23,15 @@ if (url) {
 }
 
 resp = api.utils.scheduler.GetTasks({ appid: targetAppid });
+api.marketplace.console.WriteLog("GetTasks resp->" + resp);
 if (resp.result != 0) return resp;
 
 tasks = resp.objects;
+api.marketplace.console.WriteLog("name resp->" + name);
 for (var i = 0, l = tasks.length; i < l; i++) {
     if (tasks[i].script == name) delTasks.push(tasks[i].id);
 }
+api.marketplace.console.WriteLog("delTasks->" + delTasks);
 if (delTasks.length) api.utils.scheduler.DeleteTasks({ appid: targetAppid, ids: delTasks });
 
 var startCron = getParam('start'),
