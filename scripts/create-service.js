@@ -22,6 +22,8 @@ if (url) {
     if (resp.result != 0) return buildErrorMessage(resp);
 }
 
+api.marketplace.console.WriteLog("targetAppid resp->" + targetAppid);
+
 resp = api.utils.scheduler.GetTasks({ appid: targetAppid });
 api.marketplace.console.WriteLog("GetTasks resp->" + resp);
 if (resp.result != 0) return resp;
