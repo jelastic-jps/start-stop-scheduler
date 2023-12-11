@@ -2,7 +2,7 @@ type: update
 id: start-stop-scheduler
 jpsVersion: 0.2
 logo: /images/logo.png
-baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/v2.0.0
+baseUrl: https://raw.githubusercontent.com/jelastic-jps/start-stop-scheduler/JE-56112
 description:
   text: "A simple weekly scheduler to automatically start and stop the environment within the specified Time Zone"
   short: The scheduler for automatic environment hibernation and wake-up
@@ -139,7 +139,7 @@ settings:
 
 onInstall:
   - script: |
-      var targetAppid = api.dev.apps.CreatePersistence ? "${env.appid}" : appid;
+      var targetAppid = (${fn.compareEngine(8.6-1)} >= 1) ? "${env.appid}" : appid;
       return { result: 0, onAfterReturn: { setGlobals: { appid: targetAppid }}}
   - create
 
