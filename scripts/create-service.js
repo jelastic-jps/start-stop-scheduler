@@ -5,9 +5,8 @@ import com.hivext.api.core.utils.Transport;
 
 var url = getParam('url'),
     description = "start-stop-scheduler",
-    resp, tasks, delTasks = [], envName = '${env.envName}', version;
+    resp, tasks, delTasks = [], envName = '${env.envName}';
 
-version = api.system.service.GetVersion().version.split("-").shift();
 var targetAppid = "${globals.appid}";
 
 if (url) {
