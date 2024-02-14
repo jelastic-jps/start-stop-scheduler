@@ -139,7 +139,7 @@ settings:
 
 onInstall:
   - script: |
-      var targetAppid = (${fn.compareEngine(8.6-1)} >= 0) ? "${env.appid}" : appid;
+      var targetAppid = (${fn.compareEngine(8.6.1)} >= 0) ? "${env.appid}" : appid;
       return { result: 0, onAfterReturn: { setGlobals: { appid: targetAppid }}}
   - create
 
