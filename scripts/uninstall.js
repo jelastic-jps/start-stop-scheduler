@@ -17,6 +17,7 @@ for (var i = 0, l = tasks.length; i < l; i++) {
 resp = { result:0 };
 
 if (delTasks.length > 0) {
+    resp.deletedTaskIds = delTasks;
     resp.response = api.utils.scheduler.DeleteTasks({ ids: delTasks });
 }
 
