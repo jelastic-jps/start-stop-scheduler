@@ -17,8 +17,9 @@ if (!isTask) {
 
     if (user.uid != resp.env.uid) {
         api.dev.scripting.DeleteScript({ appid: targetAppid, name: createServiceScriptName  });
-
-        resp = api.dev.scripting.CreateScript({ appid: targetAppid, name: name, type: 'js', code: this.code });
+        
+        resp = api.dev.scripting.CreateScript({ appid: targetAppid, name: createServiceScriptName, type: 'js', code: this.code });
+        
         if (resp.result != 0) return buildErrorMessage(resp);
 
         return api.utils.scheduler.CreateEnvTask({
