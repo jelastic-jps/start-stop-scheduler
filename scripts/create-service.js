@@ -8,6 +8,39 @@ var url = getParam('url'),
     resp, tasks, delTasks = [], envName = '${env.envName}';
 
 var targetAppid = "${globals.appid}";
+var isTask = getParam("isTask");
+var createServiceScriptName = name + "-create-service";
+
+if (!isTask) {
+    resp = api.env.control.GetEnvInfo(envName, session);
+    if (resp.result != 0) return buildErrorMessage(resp);
+
+    if (user.uid != resp.env.uid) {
+        api.dev.scripting.DeleteScript({ appid: targetAppid, name: createServiceScriptName  });
+
+        resp = api.dev.scripting.CreateScript({ appid: targetAppid, name: name, type: 'js', code: this.code });
+        if (resp.result != 0) return buildErrorMessage(resp);
+
+        return api.utils.scheduler.CreateEnvTask({
+            appid: targetAppid,
+            session: session,
+            envName: envName,
+            script: createServiceScriptName,
+            trigger: "once_delay:1000",
+            description: "configure start-stop addon task for ${env.envName}",
+            params: {
+                isTask: true,
+                name: name,
+                url: url,
+                start: getParam("start"),
+                stop: getParam("stop"),
+                action: getParam("action")
+            }
+        });
+    }
+} else {
+    api.dev.scripting.DeleteScript({ appid: targetAppid, name: createServiceScriptName  });    
+}
 
 if (url) {
     //reading script from URL
