@@ -33,7 +33,7 @@ onBeforeInit: |
         editable: true,
         values: values
       })
-  return jps;
+  return { result: 0, settings: jps.settings };
 
 settings:
   fields:
